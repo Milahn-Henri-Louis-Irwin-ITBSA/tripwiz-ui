@@ -1,11 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+import { db, auth } from '@/utils/firebase-config';
+import {
+  useAuthState,
+  useSignInWithGoogle,
+  useSignOut,
+} from 'react-firebase-hooks/auth';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [count, setCount] = useState(0);
+  const [user, loading, error] = useAuthState(auth);
+  const [signInWithGoogle, signInLoading] = useSignInWithGoogle(auth);
+  const [signOut, signOutLoading] = useSignOut(auth);
   return (
     <>
       <div>
@@ -28,8 +36,14 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      {user && <button>{JSON.stringify(user)}</button>}
+      {!user ? (
+        <button onClick={() => signInWithGoogle()}>SIGN IN</button>
+      ) : (
+        <button onClick={signOut}>SIGN OUT</button>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
