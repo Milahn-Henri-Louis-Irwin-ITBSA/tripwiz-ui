@@ -26,8 +26,8 @@ const createClusterCustomIcon = function(cluster) {
 // markers
 const markers = [
   {
-    geocode: [48.86, 2.3522],
-    popUp: 'Hello, I am pop up 1',
+    geocode: [-25.731340, 28.218370],
+    popUp: 'Hi Im Pretoria',
   },
   {
     geocode: [48.85, 2.3522],
