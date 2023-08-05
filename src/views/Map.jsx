@@ -6,6 +6,9 @@ import { divIcon, Icon, point } from 'leaflet';
 import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import { auth } from '@/utils/firebase-config';
 import UserInformation from '../components/ui/UserInformation';
+import Sidebar from '../components/Sidebar';
+import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
+import { useState } from 'react';
 // create custom icon
 const customIcon = new Icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png',
@@ -43,8 +46,14 @@ const initialMapCoordinates = [-28.4792625, 24.6727135];
 
 export default function Map() {
   const [user, loading] = useAuthState(auth);
+  const [showSidebar, setShowSidebar] = useState(false);
   return (
     <>
+      <TopLeftAdditionalIcons
+        showSidebar={showSidebar}
+        setShowSidebar={setShowSidebar}
+      />
+      <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
       <UserInformation />
       <MapContainer
         center={initialMapCoordinates}
