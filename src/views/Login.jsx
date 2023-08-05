@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import logo from '@/icons/SidebarLogo.png';
 import { toast } from 'react-toastify';
 import {
+  useAuthState,
   useSignInWithGoogle,
   useSignInWithEmailAndPassword,
   useCreateUserWithEmailAndPassword,
@@ -19,6 +20,7 @@ export default function Login() {
     useSignInWithEmailAndPassword(auth);
   const [createUserWithEmailAndPassword, newUser, newLoading, newError] =
     useCreateUserWithEmailAndPassword(auth);
+  const [firebaseUser, firebaseLoadng, firebaseError] = useAuthState(auth);
   const navigate = useNavigate();
   async function handleEmailAndPasswordSignIn() {
     try {
@@ -45,10 +47,6 @@ export default function Login() {
     } catch (e) {
       toast.error('Login failed');
       console.log(e);
-      switch (e.code) {
-        case 'auth/no-user':
-          return; // create user func
-      }
     }
   }
   async function createNewAccount() {
@@ -66,16 +64,11 @@ export default function Login() {
     return email.trim() === '' || password.trim() === '';
   }
   useEffect(() => {
-    if (user || googleUser || newUser) {
+    if (firebaseUser) {
       navigate('/');
     }
-  }, [user, newUser, googleUser]);
+  }, [firebaseUser]);
 
-  useEffect(() => {
-    if (error || newError || googleError) {
-      toast.error('Login failed');
-    }
-  }, [error, newError, googleError]);
   return (
     <div className="w-screen h-screen flex">
       <div className="w-2/3 h-screen flex items-center justify-center">
