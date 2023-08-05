@@ -1,49 +1,17 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import { db, auth } from '@/utils/firebase-config';
-import {
-  useAuthState,
-  useSignInWithGoogle,
-  useSignOut,
-} from 'react-firebase-hooks/auth';
+import './index.css';
 import './App.css';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
+import Map from '@/views/Map.jsx';
+import Login from '@/views/Login.jsx';
 
-function App() {
-  const [count, setCount] = useState(0);
-  const [user, loading, error] = useAuthState(auth);
-  const [signInWithGoogle, signInLoading] = useSignInWithGoogle(auth);
-  const [signOut, signOutLoading] = useSignOut(auth);
+export default function App() {
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path='/' element={<Map />} />,
+      <Route path='/login' element={<Login />} />,
+    ),
+  );
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      {user && <button>{JSON.stringify(user)}</button>}
-      {!user ? (
-        <button onClick={() => signInWithGoogle()}>SIGN IN</button>
-      ) : (
-        <button onClick={signOut}>SIGN OUT</button>
-      )}
-    </>
+    <RouterProvider router={router} />
   );
 }
-
-export default App;
