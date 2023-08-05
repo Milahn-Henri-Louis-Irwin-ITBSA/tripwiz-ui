@@ -70,6 +70,12 @@ export default function Login() {
       navigate('/');
     }
   }, [user, newUser, googleUser]);
+
+  useEffect(() => {
+    if (error || newError || googleError) {
+      toast.error('Login failed');
+    }
+  }, [error, newError, googleError]);
   return (
     <div className="w-screen h-screen flex">
       <div className="w-2/3 h-screen flex items-center justify-center">
