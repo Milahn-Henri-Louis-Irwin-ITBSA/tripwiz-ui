@@ -1,8 +1,6 @@
 import SidebarItem from '@/components/ui/SidebarItem';
 import Logo from '@/icons/SidebarLogo.png';
-import { useState } from 'react';
 export default function Sidebar({ showSidebar, setShowSidebar }) {
-  const [active, setActive] = useState(false);
   if (!showSidebar) {
     return null;
   }
