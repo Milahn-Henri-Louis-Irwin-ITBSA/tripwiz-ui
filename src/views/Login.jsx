@@ -71,11 +71,12 @@ export default function Login() {
   }, [firebaseUser]);
 
   return (
-    <div className="w-screen h-screen flex login-bg">
+    <div className="w-screen h-screen flex login-bg  items-center">
       <div className="w-2/3 h-screen flex items-center justify-center ">
         <img src={Logo} alt="logo" className="w-[20rem]" />
       </div>
-      <div className="w-1/3  flex items-center justify-center ">
+
+      <div className="w-1/3 h-[75%] flex items-center justify-center border-l-4 border-l-white  z-20  ">
         <div className="shadow-2xl rounded-lg w-[75%] h-[50%] flex flex-col items-center justify-center gap-4 px-4 bg-white">
           <span className="flex flex-col w-full gap-2">
             <label htmlFor="email">Email</label>
@@ -108,7 +109,7 @@ export default function Login() {
               'SIGN IN'
             )}
           </button>
-          {/* divider */}
+
           <div className="flex items-center gap-4">
             <span>OR</span>
           </div>
@@ -120,6 +121,7 @@ export default function Login() {
           </button>
         </div>
       </div>
+
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1440 320"
