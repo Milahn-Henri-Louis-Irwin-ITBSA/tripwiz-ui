@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import logo from '@/icons/SidebarLogo.png';
 import Logo from '@/assets/LogoTrans.png';
+import LogoText from '@/assets/LogoText.png';
 import { toast } from 'react-toastify';
 import {
   useAuthState,
@@ -78,7 +78,10 @@ export default function Login() {
 
       <div className="w-1/3 h-[75%] flex items-center justify-center border-l-4 border-l-white  z-20  ">
         <div class="card">
-          <div class="card-details ">
+          <div class="card-details">
+            <div className="flex justify-center mb-2 ">
+              <img src={LogoText} alt="logo" className="w-[7.5rem]" />
+            </div>
             <label
               for="input-group-1"
               class="block  text-base font-semibold text-gray-400"
@@ -102,11 +105,12 @@ export default function Login() {
                 type="text"
                 value={email}
                 id="input-group-1"
-                className="bg-gray-50 input-border border-2 border-[#0896fc]  text-gray-800 font-semibold outline-none text-sm rounded-lg  block w-full pl-10 p-2.5"
+                className="bg-gray-50 input-border border-2 border-gray-400 focus:border-[#0896fc] text-[#0896fc] font-semibold outline-none text-sm rounded-lg  block w-full pl-10 p-2.5"
                 placeholder="support@tripwhiz.com"
                 onChange={({ target }) => setEmail(target.value.trim())}
               />
             </div>
+
             <label
               for="input-group-1"
               class="block  text-base font-semibold text-gray-400"
@@ -130,7 +134,7 @@ export default function Login() {
                 type="password"
                 value={password}
                 id="input-group-1"
-                className="bg-gray-50 input-border border-2 border-[#0896fc]  text-gray-800 font-semibold outline-none text-sm rounded-lg  block w-full pl-10 p-2.5"
+                className="bg-gray-50 input-border border-2 border-gray-400 focus:border-[#0896fc]  text-[#0896fc] font-semibold outline-none text-sm rounded-lg  block w-full pl-10 p-2.5"
                 placeholder="support@tripwhiz.com"
                 onChange={({ target }) => setPassword(target.value.trim())}
               />
