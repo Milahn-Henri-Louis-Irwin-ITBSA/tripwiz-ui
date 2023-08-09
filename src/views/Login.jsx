@@ -76,7 +76,7 @@ export default function Login() {
         <img src={Logo} alt="logo" className="w-[20rem]" />
       </div>
 
-      <div className="w-1/3 h-[75%] flex items-center justify-center border-l-4 border-l-white  z-20  ">
+      <div className="w-1/3 h-[75%] flex items-center justify-center border-l-4  border-l-white  z-20  ">
         <div class="card">
           <div class="card-details">
             <div className="flex justify-center mb-2 ">
@@ -163,49 +163,6 @@ export default function Login() {
             </button>
           </div>
         </div>
-        {/* <div className="shadow-2xl rounded-lg w-[75%] h-[50%] flex flex-col items-center justify-center gap-4 px-4 bg-white">
-          <span className="flex flex-col w-full gap-2">
-            <label htmlFor="email">Email</label>
-            <input
-              type="text"
-              value={email}
-              placeholder="milahn@gmail.com"
-              className="outline-none border-b border-[#0896FC] px-4 py-2"
-              onChange={({ target }) => setEmail(target.value.trim())}
-            />
-          </span>
-          <span className="flex flex-col w-full gap-2">
-            <label htmlFor="email">Password</label>
-            <input
-              type="password"
-              value={password}
-              placeholder="Password"
-              className="outline-none border-b border-[#0896FC] px-4 py-2"
-              onChange={({ target }) => setPassword(target.value.trim())}
-            />
-          </span>
-          <button
-            onClick={handleEmailAndPasswordSignIn}
-            disabled={isButtonDisabled()}
-            className="w-full bg-[#0896FC] text-white px-4 py-2 rounded"
-          >
-            {loading ? (
-              <LoadingIndicator loadingMessage="Validating..." />
-            ) : (
-              'SIGN IN'
-            )}
-          </button>
-
-          <div className="flex items-center gap-4">
-            <span>OR</span>
-          </div>
-          <button
-            onClick={() => signInWithGoogle()}
-            className="w-full rounded bg-black px-4 py-2 flex items-center justify-center"
-          >
-            <img src={GoogleIcon} className="w-6" />
-          </button>
-        </div> */}
       </div>
 
       <svg
