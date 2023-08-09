@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import logo from '@/icons/SidebarLogo.png';
 import Logo from '@/assets/LogoTrans.png';
+import LogoText from '@/assets/LogoText.png';
 import { toast } from 'react-toastify';
 import {
   useAuthState,
@@ -76,49 +76,92 @@ export default function Login() {
         <img src={Logo} alt="logo" className="w-[20rem]" />
       </div>
 
-      <div className="w-1/3 h-[75%] flex items-center justify-center border-l-4 border-l-white  z-20  ">
-        <div className="shadow-2xl rounded-lg w-[75%] h-[50%] flex flex-col items-center justify-center gap-4 px-4 bg-white">
-          <span className="flex flex-col w-full gap-2">
-            <label htmlFor="email">Email</label>
-            <input
-              type="text"
-              value={email}
-              placeholder="milahn@gmail.com"
-              className="outline-none border-b border-[#0896FC] px-4 py-2"
-              onChange={({ target }) => setEmail(target.value.trim())}
-            />
-          </span>
-          <span className="flex flex-col w-full gap-2">
-            <label htmlFor="email">Password</label>
-            <input
-              type="password"
-              value={password}
-              placeholder="Password"
-              className="outline-none border-b border-[#0896FC] px-4 py-2"
-              onChange={({ target }) => setPassword(target.value.trim())}
-            />
-          </span>
-          <button
-            onClick={handleEmailAndPasswordSignIn}
-            disabled={isButtonDisabled()}
-            className="w-full bg-[#0896FC] text-white px-4 py-2 rounded"
-          >
-            {loading ? (
-              <LoadingIndicator loadingMessage="Validating..." />
-            ) : (
-              'SIGN IN'
-            )}
-          </button>
+      <div className="w-1/3 h-[75%] flex items-center justify-center border-l-4  border-l-white  z-20  ">
+        <div class="card">
+          <div class="card-details">
+            <div className="flex justify-center mb-2 ">
+              <img src={LogoText} alt="logo" className="w-[7.5rem]" />
+            </div>
+            <label
+              for="input-group-1"
+              class="block  text-base font-semibold text-gray-400"
+            >
+              Email
+            </label>
+            <div class="relative mb-2">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                <svg
+                  class="w-4 h-4 text-[#0896FC] "
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 16"
+                >
+                  <path d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z" />
+                  <path d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                value={email}
+                id="input-group-1"
+                className="bg-gray-50 input-border border-2 border-gray-400 focus:border-[#0896fc] text-[#0896fc] font-semibold outline-none text-sm rounded-lg  block w-full pl-10 p-2.5"
+                placeholder="support@tripwhiz.com"
+                onChange={({ target }) => setEmail(target.value.trim())}
+              />
+            </div>
 
-          <div className="flex items-center gap-4">
-            <span>OR</span>
+            <label
+              for="input-group-1"
+              class="block  text-base font-semibold text-gray-400"
+            >
+              Password
+            </label>
+            <div class="relative mb-6">
+              <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="w-4 h-4 text-[#0896FC] "
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M3.5 11.5a3.5 3.5 0 1 1 3.163-5H14L15.5 8 14 9.5l-1-1-1 1-1-1-1 1-1-1-1 1H6.663a3.5 3.5 0 0 1-3.163 2zM2.5 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+                </svg>
+              </div>
+              <input
+                type="password"
+                value={password}
+                id="input-group-1"
+                className="bg-gray-50 input-border border-2 border-gray-400 focus:border-[#0896fc]  text-[#0896fc] font-semibold outline-none text-sm rounded-lg  block w-full pl-10 p-2.5"
+                placeholder="Password"
+                onChange={({ target }) => setPassword(target.value.trim())}
+              />
+            </div>
+
+            <button
+              onClick={handleEmailAndPasswordSignIn}
+              disabled={isButtonDisabled()}
+              className="w-full bg-[#0896FC] text-white px-4 py-2 rounded"
+            >
+              {loading ? (
+                <LoadingIndicator loadingMessage="Validating..." />
+              ) : (
+                'SIGN IN'
+              )}
+            </button>
+
+            <div className="flex items-center justify-center gap-4">
+              <span className="text-gray-400 font-semibold">OR</span>
+            </div>
+            <button
+              onClick={() => signInWithGoogle()}
+              className="w-full rounded bg-black px-4 py-2 flex items-center justify-center"
+            >
+              <img src={GoogleIcon} className="w-6" />
+            </button>
           </div>
-          <button
-            onClick={() => signInWithGoogle()}
-            className="w-full rounded bg-black px-4 py-2 flex items-center justify-center"
-          >
-            <img src={GoogleIcon} className="w-6" />
-          </button>
         </div>
       </div>
 
