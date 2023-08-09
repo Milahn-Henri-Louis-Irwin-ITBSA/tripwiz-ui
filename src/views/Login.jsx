@@ -135,7 +135,7 @@ export default function Login() {
                 value={password}
                 id="input-group-1"
                 className="bg-gray-50 input-border border-2 border-gray-400 focus:border-[#0896fc]  text-[#0896fc] font-semibold outline-none text-sm rounded-lg  block w-full pl-10 p-2.5"
-                placeholder="support@tripwhiz.com"
+                placeholder="Password"
                 onChange={({ target }) => setPassword(target.value.trim())}
               />
             </div>
