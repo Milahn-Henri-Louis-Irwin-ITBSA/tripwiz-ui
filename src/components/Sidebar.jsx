@@ -5,7 +5,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
     return null;
   }
   return (
-    <div className="h-[95dvh] w-[20rem] absolute left-5 top-5 z-[99999] bg-slate-100 rounded-3xl">
+    <div className="h-[95dvh] w-[20rem] absolute left-5 top-5 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
       <div className="h-2/6 p-2">
         <div className="h-[10px] pt-2 flex items-center justify-start">
           <svg
