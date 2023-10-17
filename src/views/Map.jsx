@@ -7,6 +7,7 @@ import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import { auth } from '@/utils/firebase-config';
 import UserInformation from '../components/ui/UserInformation';
 import Sidebar from '../components/Sidebar';
+import Feed from '../components/Feed';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
 import { useState } from 'react';
 // create custom icon
@@ -47,6 +48,7 @@ const initialMapCoordinates = [-28.4792625, 24.6727135];
 export default function Map() {
   const [user, loading] = useAuthState(auth);
   const [showSidebar, setShowSidebar] = useState(false);
+
   return (
     <>
       <TopLeftAdditionalIcons
@@ -54,6 +56,7 @@ export default function Map() {
         setShowSidebar={setShowSidebar}
       />
       <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+      <Feed />
       <UserInformation />
       <MapContainer
         center={initialMapCoordinates}
