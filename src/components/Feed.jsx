@@ -3,7 +3,7 @@ import FeedIncoming from './ui/FeedIncoming';
 export default function Feed() {
   return (
     <div className="h-[45dvh] w-[20rem] absolute  right-5 top-24 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
-      <div className="h-1/5 p-4 bg-[#005DCA] rounded-l-3xl rounded-r-3xl rounded-b-none">
+      <div className="h-1/5 p-4 bg-[#005DCA] rounded-l-3xl rounded-r-3xl rounded-b-sm">
         <div className="h-[10px] pt-2 flex items-center justify-end ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
