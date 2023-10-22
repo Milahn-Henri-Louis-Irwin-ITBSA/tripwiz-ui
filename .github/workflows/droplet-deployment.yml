@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 18 # Adjust to your Node.js version
+          node-version: 14 # Adjust to your Node.js version
 
       - name: Navigate to Project Directory
         run: cd /var/www/tripwiz.me/html
@@ -34,11 +34,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Create Directory
+        run: mkdir -p /var/www/tripwiz.me/html
+
       - name: Deploy to Server
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          mkdir -p /var/www/tripwiz.me/html
           scp -r /var/www/tripwiz.me/html/* root@64.226.124.91:/var/www/tripwiz.me/html/
 
       - name: SSH to Server
