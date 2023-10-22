@@ -1,0 +1,46 @@
+name: Build and Deploy UI
+
+on:
+  push:
+    branches:
+      - main # Change to the branch you want to trigger the deployment
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18 # Adjust to your Node.js version
+
+      - name: Install dependencies
+        run: npm install # Use npm or yarn, depending on your project
+
+      - name: Build UI
+        run: npm run build # Adjust the build command as needed
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p /var/www/tripwiz.me/html
+          scp -r ./dist/* root@64.226.124.91:/var/www/tripwiz.me/html/
+          # Replace ./dist/* with the path to your build files
+
+      - name: SSH to Server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          ssh -i <(echo "$SSH_PRIVATE_KEY") root@64.226.124.91 "sudo systemctl restart nginx"

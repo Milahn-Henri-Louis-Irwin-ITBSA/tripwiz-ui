@@ -156,7 +156,7 @@ export default function Login() {
               <span className="text-gray-400 font-semibold">OR</span>
             </div>
             <button
-              onClick={() => signInWithGoogle()}
+              onClick={async () => await signInWithGoogle()}
               className="w-full rounded bg-black px-4 py-2 flex items-center justify-center"
             >
               <img src={GoogleIcon} className="w-6" />
