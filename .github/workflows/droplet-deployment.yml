@@ -3,7 +3,7 @@ name: Build and Deploy UI
 on:
   push:
     branches:
-      - main # Change to the branch you want to trigger the deployment
+      - prod # Change to the branch you want to trigger the deployment
 
 jobs:
   build:
