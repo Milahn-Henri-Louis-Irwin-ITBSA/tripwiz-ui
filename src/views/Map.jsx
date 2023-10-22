@@ -5,9 +5,9 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { divIcon, Icon, point } from 'leaflet';
 import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import { auth } from '@/utils/firebase-config';
-import UserInformation from '../components/ui/UserInformation';
-import Sidebar from '../components/Sidebar';
-import Feed from '../components/Feed';
+import UserInformation from '@/components/ui/UserInformation';
+import Sidebar from '@/components/Sidebar';
+import Feed from '@/components/Feed';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
 import { useState } from 'react';
 // create custom icon
