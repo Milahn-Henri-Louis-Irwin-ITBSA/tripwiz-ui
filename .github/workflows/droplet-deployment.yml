@@ -18,6 +18,9 @@ jobs:
         with:
           node-version: 18 # Adjust to your Node.js version
 
+      - name: Navigate to Project Directory
+        run: cd /var/www/tripwiz.me/html
+
       - name: Install dependencies
         run: npm install # Use npm or yarn, depending on your project
 
@@ -35,9 +38,9 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
+          ssh-keyscan 64.226.124.91 >> ~/.ssh/known_hosts
           mkdir -p /var/www/tripwiz.me/html
-          scp -r ./dist/* root@64.226.124.91:/var/www/tripwiz.me/html/
-          # Replace ./dist/* with the path to your build files
+          scp -r /var/www/tripwiz.me/html/* root@64.226.124.91:/var/www/tripwiz.me/html/
 
       - name: SSH to Server
         env:
