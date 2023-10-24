@@ -1,10 +1,27 @@
-import FeedIncoming from './ui/FeedIncoming';
-import ChatInput from './ui/ChatInput';
-
+import FeedIncoming from '@/components/ui/FeedIncoming';
+import ChatInput from '@/components/ui/ChatInput';
+import { useState, useEffect } from 'react';
+import { auth, db } from '@/utils/firebase-config';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import { collection, orderBy, query } from 'firebase/firestore';
 export default function Feed({ showFeed, setShowFeed }) {
-  if (!showFeed) {
+  const q = query(collection(db, 'feed'), orderBy('created_at', 'asc'));
+  const [user] = useAuthState(auth);
+  const [feedData, setfeedData] = useState([]);
+  const [snapshot] = useCollection(q);
+
+  useEffect(() => {
+    if (!user) return;
+    if (!snapshot) return;
+    const feedData = snapshot.docs.map((doc) => doc.data()?.message);
+    setfeedData(feedData);
+  }, [user, snapshot]);
+
+  if (!showFeed || !setShowFeed) {
     return null;
   }
+
   return (
     <div className="h-[45dvh] w-[20rem] absolute  right-5 top-24 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
       <div className="h-1/5 p-4 bg-[#005DCA] rounded-l-3xl rounded-r-3xl rounded-br-none rounded-bl-none">
@@ -27,20 +44,9 @@ export default function Feed({ showFeed, setShowFeed }) {
       </div>
       <div className="h-4/5 flex flex-col p-4 ">
         <div className="grid grid-cols-5 gap-3 overflow-auto h-5/6">
-          <FeedIncoming message={'There is a fire on the N1'} />
-          <FeedIncoming
-            message={'Something Tried to Hijack me at the KFC Drive-Thru '}
-          />
-          <FeedIncoming
-            message={
-              'Taxi Driver gone mad, throwing stones at passing cars near Menlyn Mall'
-            }
-          />
-          <FeedIncoming
-            message={
-              'Potholes the size of the moon on Lynnwood Road. Lost 2 tires. Thanks South Africa'
-            }
-          />
+          {feedData.map((data, indx) => (
+            <FeedIncoming message={data} key={indx} />
+          ))}
         </div>
         <div className="flex items-end   h-1/6">
           <ChatInput />
