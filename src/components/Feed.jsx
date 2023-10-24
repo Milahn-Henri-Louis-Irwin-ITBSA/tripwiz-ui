@@ -1,9 +1,10 @@
 import FeedIncoming from './ui/FeedIncoming';
+import ChatInput from './ui/ChatInput';
 
 export default function Feed() {
   return (
     <div className="h-[45dvh] w-[20rem] absolute  right-5 top-24 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
-      <div className="h-1/5 p-4 bg-[#005DCA] rounded-l-3xl rounded-r-3xl rounded-b-sm">
+      <div className="h-1/5 p-4 bg-[#005DCA] rounded-l-3xl rounded-r-3xl rounded-b-none">
         <div className="h-[10px] pt-2 flex items-center justify-end ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -19,13 +20,31 @@ export default function Feed() {
           <h1 className="text-white text-2xl font-semibold">COMMUNITY FEED</h1>
         </div>
       </div>
-      <div className="h-4/5 flex flex-col  p-4">
-        <div className="grid grid-cols-5 gap-2">
+      <div className="h-4/5 flex flex-col p-4 ">
+        <div className="grid grid-cols-5 gap-3 overflow-auto h-5/6">
           <FeedIncoming
             message={
               'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet'
             }
           />
+          <FeedIncoming
+            message={
+              'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet'
+            }
+          />
+          <FeedIncoming
+            message={
+              'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet'
+            }
+          />
+          <FeedIncoming
+            message={
+              'Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet'
+            }
+          />
+        </div>
+        <div className="flex items-end   h-1/6">
+          <ChatInput />
         </div>
       </div>
     </div>
