@@ -1,4 +1,4 @@
-import FeedIncoming from '@/ui/FeedIncoming';
+import FeedIncoming from './ui/FeedIncoming';
 
 export default function Feed() {
   return (
