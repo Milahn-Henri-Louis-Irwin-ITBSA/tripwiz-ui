@@ -9,6 +9,7 @@ import UserInformation from '@/components/ui/UserInformation';
 import Sidebar from '@/components/Sidebar';
 import Feed from '@/components/Feed';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
+import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
 import { useState } from 'react';
 // create custom icon
 const customIcon = new Icon({
@@ -31,15 +32,15 @@ const createClusterCustomIcon = function (cluster) {
 const markers = [
   {
     geocode: [-25.73134, 28.21837],
-    popUp: 'Hi Im Pretoria',
+    popUp: 'Pretoria',
   },
   {
-    geocode: [48.85, 2.3522],
-    popUp: 'Hello, I am pop up 2',
+    geocode: [-33.9249, 18.4241],
+    popUp: 'Cape Town',
   },
   {
-    geocode: [48.855, 2.34],
-    popUp: 'Hello, I am pop up 3',
+    geocode: [-29.8587, 31.0218],
+    popUp: 'Durban',
   },
 ];
 
@@ -48,6 +49,7 @@ const initialMapCoordinates = [-28.4792625, 24.6727135];
 export default function Map() {
   const [user, loading] = useAuthState(auth);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [showFeed, setShowFeed] = useState(false);
 
   return (
     <>
@@ -55,8 +57,9 @@ export default function Map() {
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
       />
+      <TopRightAdditionalIcons showFeed={showFeed} setShowFeed={setShowFeed} />
       <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
-      <Feed />
+      <Feed showFeed={showFeed} setShowFeed={setShowFeed} />
       <UserInformation />
       <MapContainer
         center={initialMapCoordinates}
