@@ -1,10 +1,8 @@
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { divIcon, Icon, point } from 'leaflet';
 import LoadingIndicator from '@/components/ui/LoadingIndicator';
-import { auth } from '@/utils/firebase-config';
 import UserInformation from '@/components/ui/UserInformation';
 import Sidebar from '@/components/Sidebar';
 import Feed from '@/components/Feed';
@@ -47,7 +45,6 @@ const markers = [
 const initialMapCoordinates = [-28.4792625, 24.6727135];
 
 export default function Map() {
-  const [user, loading] = useAuthState(auth);
   const [showSidebar, setShowSidebar] = useState(false);
   const [showFeed, setShowFeed] = useState(false);
 
@@ -66,25 +63,10 @@ export default function Map() {
         zoom={6}
         className="w-screen h-screen"
       >
-        {/* OPEN STREEN MAPS TILES */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {/* WATERCOLOR CUSTOM TILES */}
-        {/* <TileLayer
-        attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
-      /> */}
-        {/* GOOGLE MAPS TILES */}
-        {/* <TileLayer
-        attribution="Google Maps"
-        // url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" // regular
-        // url="http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}" // satellite
-        url="http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}" // terrain
-        maxZoom={20}
-        subdomains={["mt0", "mt1", "mt2", "mt3"]}
-      /> */}
 
         <MarkerClusterGroup
           chunkedLoading
@@ -97,18 +79,6 @@ export default function Map() {
               <Popup>{marker.popUp}</Popup>
             </Marker>
           ))}
-
-          {/* Hard coded markers */}
-          {/* <Marker position={[51.505, -0.09]} icon={customIcon}>
-          <Popup>This is popup 1</Popup>
-        </Marker>
-        <Marker position={[51.504, -0.1]} icon={customIcon}>
-          <Popup>This is popup 2</Popup>
-        </Marker>
-        <Marker position={[51.5, -0.09]} icon={customIcon}>
-          <Popup>This is popup 3</Popup>
-        </Marker>
-       */}
         </MarkerClusterGroup>
       </MapContainer>
     </>

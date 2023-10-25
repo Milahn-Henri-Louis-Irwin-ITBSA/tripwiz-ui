@@ -1,8 +1,8 @@
 import { useState } from 'react';
-
+import LoadingIndicator from '@/components/ui/LoadingIndicator';
 function ChatInput() {
   const [message, setMessage] = useState('');
-
+  const [sendLoading, setSendLoading] = useState(false);
   const handleChange = (e) => {
     setMessage(e.target.value);
   };
@@ -26,7 +26,8 @@ function ChatInput() {
         className="ml-2 bg-[#005DCA] text-white rounded-lg px-3 py-1"
         onClick={handleSend}
       >
-        Send
+        {sendLoading && <LoadingIndicator loadingMessage={'Sending'} />}
+        {!sendLoading && 'Send'}
       </button>
     </div>
   );
