@@ -43,7 +43,7 @@ export default function Feed({ showFeed, setShowFeed }) {
         </div>
       </div>
       <div className="h-4/5 flex flex-col p-4 ">
-        <div className="grid grid-cols-5 gap-3 overflow-auto h-5/6">
+        <div className="grid grid-cols-5 gap-3 overflow-auto no-scrollbar h-5/6">
           {feedData.map((data, indx) => (
             <FeedIncoming message={data} key={indx} />
           ))}
