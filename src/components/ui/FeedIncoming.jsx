@@ -5,7 +5,7 @@ export default function FeedIncoming({ message }) {
     <>
       <div className=" flex justify-center">
         <img
-          className="w- rounded-full aspect-sqaure object-contain"
+          className=" rounded-full aspect-sqaure object-contain"
           src={MessageIcon}
           alt="Message Icon"
         />

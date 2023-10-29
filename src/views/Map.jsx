@@ -1,14 +1,13 @@
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { divIcon, Icon, point } from 'leaflet';
 import LoadingIndicator from '@/components/ui/LoadingIndicator';
-import { auth } from '@/utils/firebase-config';
 import UserInformation from '@/components/ui/UserInformation';
 import Sidebar from '@/components/Sidebar';
 import Feed from '@/components/Feed';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
+import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
 import { useState } from 'react';
 // create custom icon
 const customIcon = new Icon({
@@ -31,23 +30,23 @@ const createClusterCustomIcon = function (cluster) {
 const markers = [
   {
     geocode: [-25.73134, 28.21837],
-    popUp: 'Hi Im Pretoria',
+    popUp: 'Pretoria',
   },
   {
-    geocode: [48.85, 2.3522],
-    popUp: 'Hello, I am pop up 2',
+    geocode: [-33.9249, 18.4241],
+    popUp: 'Cape Town',
   },
   {
-    geocode: [48.855, 2.34],
-    popUp: 'Hello, I am pop up 3',
+    geocode: [-29.8587, 31.0218],
+    popUp: 'Durban',
   },
 ];
 
 const initialMapCoordinates = [-28.4792625, 24.6727135];
 
 export default function Map() {
-  const [user, loading] = useAuthState(auth);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [showFeed, setShowFeed] = useState(false);
 
   return (
     <>
@@ -55,33 +54,19 @@ export default function Map() {
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
       />
+      <TopRightAdditionalIcons showFeed={showFeed} setShowFeed={setShowFeed} />
       <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
-      <Feed />
+      <Feed showFeed={showFeed} setShowFeed={setShowFeed} />
       <UserInformation />
       <MapContainer
         center={initialMapCoordinates}
         zoom={6}
         className="w-screen h-screen"
       >
-        {/* OPEN STREEN MAPS TILES */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {/* WATERCOLOR CUSTOM TILES */}
-        {/* <TileLayer
-        attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg"
-      /> */}
-        {/* GOOGLE MAPS TILES */}
-        {/* <TileLayer
-        attribution="Google Maps"
-        // url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" // regular
-        // url="http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}" // satellite
-        url="http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}" // terrain
-        maxZoom={20}
-        subdomains={["mt0", "mt1", "mt2", "mt3"]}
-      /> */}
 
         <MarkerClusterGroup
           chunkedLoading
@@ -94,18 +79,6 @@ export default function Map() {
               <Popup>{marker.popUp}</Popup>
             </Marker>
           ))}
-
-          {/* Hard coded markers */}
-          {/* <Marker position={[51.505, -0.09]} icon={customIcon}>
-          <Popup>This is popup 1</Popup>
-        </Marker>
-        <Marker position={[51.504, -0.1]} icon={customIcon}>
-          <Popup>This is popup 2</Popup>
-        </Marker>
-        <Marker position={[51.5, -0.09]} icon={customIcon}>
-          <Popup>This is popup 3</Popup>
-        </Marker>
-       */}
         </MarkerClusterGroup>
       </MapContainer>
     </>

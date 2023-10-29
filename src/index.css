@@ -114,3 +114,7 @@ button:disabled {
 }
 
 /* LOGIN CARD END*/
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
