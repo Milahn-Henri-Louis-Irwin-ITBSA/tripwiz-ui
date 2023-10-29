@@ -6,6 +6,7 @@ import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import UserInformation from '@/components/ui/UserInformation';
 import Sidebar from '@/components/Sidebar';
 import Feed from '@/components/Feed';
+import MapEvents from '@/components/MapEvents';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
 import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
 import { useState } from 'react';
@@ -47,6 +48,7 @@ const initialMapCoordinates = [-28.4792625, 24.6727135];
 export default function Map() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showFeed, setShowFeed] = useState(false);
+  const [showEvent, setShowEvent] = useState(true);
 
   return (
     <>
@@ -56,6 +58,7 @@ export default function Map() {
       />
       <TopRightAdditionalIcons showFeed={showFeed} setShowFeed={setShowFeed} />
       <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+      <MapEvents showEvent={showEvent} setShowEvent={setShowEvent} />
       <Feed showFeed={showFeed} setShowFeed={setShowFeed} />
       <UserInformation />
       <MapContainer
