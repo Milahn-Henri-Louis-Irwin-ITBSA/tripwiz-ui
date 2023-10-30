@@ -8,7 +8,7 @@ import Feed from '@/components/Feed';
 import MapEvents from '@/components/MapEvents';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
 import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BottomMiddleIcon from '@/components/ui/BottomMiddleIcon';
 // create custom icon
 const customIcon = new Icon({
@@ -49,6 +49,21 @@ export default function Map() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [showFeed, setShowFeed] = useState(true);
   const [showEvent, setShowEvent] = useState(true);
+
+  const handleMapClick = () => {
+    setShowSidebar(false);
+    setShowFeed(false);
+    setShowEvent(false);
+  };
+
+  useEffect(() => {
+    const mapContainer = document.querySelector('.leaflet-container');
+    mapContainer.addEventListener('click', handleMapClick);
+
+    return () => {
+      mapContainer.removeEventListener('click', handleMapClick);
+    };
+  }, []);
 
   return (
     <>
