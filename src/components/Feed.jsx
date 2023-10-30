@@ -39,7 +39,7 @@ export default function Feed({ showFeed, setShowFeed }) {
           </svg>
         </div>
         <div className="h-full flex items-center justify-center">
-          <h1 className="text-white text-2xl font-semibold">COMMUNITY FEED</h1>
+          <h1 className="text-white text-2xl font-normal">Community Feed</h1>
         </div>
       </div>
       <div className="h-4/5 flex flex-col p-4 ">
