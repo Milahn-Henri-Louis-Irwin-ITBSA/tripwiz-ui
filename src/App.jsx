@@ -8,8 +8,23 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/utils/firebase-config';
 import Logo from '@/icons/SidebarLogo.png';
+import { useEffect } from 'react';
 export default function App() {
-  const [_, loading] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
+
+  useEffect(() => {
+    if (!user) return;
+    user
+      .getIdTokenResult()
+      .then((idTokenResult) => {
+        console.log(idTokenResult);
+        console.log(idTokenResult.token);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [user]);
+
   if (loading) {
     return (
       <div className="w-screen h-screen flex items-center justify-center">
@@ -17,6 +32,7 @@ export default function App() {
       </div>
     );
   }
+
   return (
     <div className="app">
       <Routes>
