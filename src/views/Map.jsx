@@ -2,13 +2,14 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { divIcon, Icon, point } from 'leaflet';
-import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import UserInformation from '@/components/ui/UserInformation';
 import Sidebar from '@/components/Sidebar';
 import Feed from '@/components/Feed';
+import MapEvents from '@/components/MapEvents';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
 import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import BottomMiddleIcon from '@/components/ui/BottomMiddleIcon';
 // create custom icon
 const customIcon = new Icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png',
@@ -45,8 +46,24 @@ const markers = [
 const initialMapCoordinates = [-28.4792625, 24.6727135];
 
 export default function Map() {
-  const [showSidebar, setShowSidebar] = useState(false);
-  const [showFeed, setShowFeed] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [showFeed, setShowFeed] = useState(true);
+  const [showEvent, setShowEvent] = useState(true);
+
+  const handleMapClick = () => {
+    setShowSidebar(false);
+    setShowFeed(false);
+    setShowEvent(false);
+  };
+
+  useEffect(() => {
+    const mapContainer = document.querySelector('.leaflet-container');
+    mapContainer.addEventListener('click', handleMapClick);
+
+    return () => {
+      mapContainer.removeEventListener('click', handleMapClick);
+    };
+  }, []);
 
   return (
     <>
@@ -55,7 +72,9 @@ export default function Map() {
         setShowSidebar={setShowSidebar}
       />
       <TopRightAdditionalIcons showFeed={showFeed} setShowFeed={setShowFeed} />
+      <BottomMiddleIcon showEvent={showEvent} setShowEvent={setShowEvent} />
       <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+      <MapEvents showEvent={showEvent} setShowEvent={setShowEvent} />
       <Feed showFeed={showFeed} setShowFeed={setShowFeed} />
       <UserInformation />
       <MapContainer
