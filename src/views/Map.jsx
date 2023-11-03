@@ -9,7 +9,10 @@ import MapEvents from '@/components/MapEvents';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
 import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
 import { useState, useEffect } from 'react';
+import { collection } from 'firebase/firestore';
 import BottomMiddleIcon from '@/components/ui/BottomMiddleIcon';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import { db } from '@/utils/firebase-config';
 // create custom icon
 const customIcon = new Icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png',
@@ -28,20 +31,20 @@ const createClusterCustomIcon = function (cluster) {
 };
 
 // markers
-const markers = [
-  {
-    geocode: [-25.73134, 28.21837],
-    popUp: 'Pretoria',
-  },
-  {
-    geocode: [-33.9249, 18.4241],
-    popUp: 'Cape Town',
-  },
-  {
-    geocode: [-29.8587, 31.0218],
-    popUp: 'Durban',
-  },
-];
+// const markers = [
+//   {
+//     geocode: [-25.73134, 28.21837],
+//     popUp: 'Pretoria',
+//   },
+//   {
+//     geocode: [-33.9249, 18.4241],
+//     popUp: 'Cape Town',
+//   },
+//   {
+//     geocode: [-29.8587, 31.0218],
+//     popUp: 'Durban',
+//   },
+// ];
 
 const initialMapCoordinates = [-28.4792625, 24.6727135];
 
@@ -49,6 +52,9 @@ export default function Map() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [showFeed, setShowFeed] = useState(true);
   const [showEvent, setShowEvent] = useState(true);
+  const [value, loading, error] = useCollection(collection(db, 'map'), {
+    snapshotListenOptions: { includeMetadataChanges: true },
+  });
 
   const handleMapClick = () => {
     setShowSidebar(false);
@@ -58,12 +64,13 @@ export default function Map() {
 
   useEffect(() => {
     const mapContainer = document.querySelector('.leaflet-container');
-    mapContainer.addEventListener('click', handleMapClick);
+    if (!mapContainer) return;
+    mapContainer.addEventListener('mousedown', handleMapClick);
 
     return () => {
-      mapContainer.removeEventListener('click', handleMapClick);
+      mapContainer.removeEventListener('mousedown', handleMapClick);
     };
-  }, []);
+  }, [loading]);
 
   return (
     <>
@@ -87,18 +94,27 @@ export default function Map() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        <MarkerClusterGroup
-          chunkedLoading
-          iconCreateFunction={createClusterCustomIcon}
-        >
-          {/* Mapping through the markers */}
-          {markers.map((marker, indx) => (
-            // eslint-disable-next-line react/jsx-key
-            <Marker position={marker.geocode} key={indx} icon={customIcon}>
-              <Popup>{marker.popUp}</Popup>
-            </Marker>
-          ))}
-        </MarkerClusterGroup>
+        {!loading && !error && (
+          <MarkerClusterGroup
+            chunkedLoading
+            iconCreateFunction={createClusterCustomIcon}
+          >
+            {/* Mapping through the markers */}
+            {value.docs.map((marker, indx) => (
+              // eslint-disable-next-line react/jsx-key
+              <Marker
+                position={[
+                  marker.data().coordinates.latitude,
+                  marker.data().coordinates.longitude,
+                ]}
+                key={indx}
+                icon={customIcon}
+              >
+                <Popup>{marker.data().event}</Popup>
+              </Marker>
+            ))}
+          </MarkerClusterGroup>
+        )}
       </MapContainer>
     </>
   );
