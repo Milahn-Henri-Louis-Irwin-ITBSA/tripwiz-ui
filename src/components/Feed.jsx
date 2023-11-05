@@ -33,7 +33,7 @@ export default function Feed({ showFeed, setShowFeed }) {
     // Use setTimeout to ensure the content has been updated
 
     mainFeed.scrollTop = mainFeed.scrollHeight + 10;
-  }, [feedData]);
+  }, [feedData, showFeed]);
 
   if (!showFeed || !setShowFeed) {
     return null;
