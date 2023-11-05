@@ -14,9 +14,26 @@ export default function Feed({ showFeed, setShowFeed }) {
   useEffect(() => {
     if (!user) return;
     if (!snapshot) return;
-    const feedData = snapshot.docs.map((doc) => doc.data()?.message);
+    const feedData = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        created_at: data.created_at,
+        message: data.message,
+        created_by_pic: data.created_by_pic,
+        message_id: doc.id,
+      };
+    });
     setfeedData(feedData);
   }, [user, snapshot]);
+
+  useEffect(() => {
+    const mainFeed = document.getElementById('main-feed');
+    if (!mainFeed) return;
+
+    // Use setTimeout to ensure the content has been updated
+
+    mainFeed.scrollTop = mainFeed.scrollHeight + 10;
+  }, [feedData]);
 
   if (!showFeed || !setShowFeed) {
     return null;
@@ -42,13 +59,16 @@ export default function Feed({ showFeed, setShowFeed }) {
           <h1 className="text-white text-2xl font-normal">Community Feed</h1>
         </div>
       </div>
-      <div className="h-4/5 flex flex-col p-4 ">
-        <div className="grid grid-cols-5 gap-3 overflow-auto no-scrollbar h-5/6">
+      <div className="h-4/5 flex flex-col p-4">
+        <div
+          id="main-feed"
+          className="grid grid-cols-5 gap-2 overflow-y-scroll overflow-x-hidden no-scrollbar h-5/6"
+        >
           {feedData.map((data, indx) => (
-            <FeedIncoming message={data} key={indx} />
+            <FeedIncoming data={data} key={indx} />
           ))}
         </div>
-        <div className="flex items-end   h-1/6">
+        <div className="flex items-end h-1/6">
           <ChatInput />
         </div>
       </div>

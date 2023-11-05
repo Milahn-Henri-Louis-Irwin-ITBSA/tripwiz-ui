@@ -105,14 +105,15 @@ export default function Map() {
             iconCreateFunction={createClusterCustomIcon}
           >
             {/* Mapping through the markers */}
-            {value.docs.map((marker, indx) => (
+            {value.docs.map((marker) => (
               // eslint-disable-next-line react/jsx-key
+
               <Marker
                 position={[
                   marker.data().coordinates.latitude,
                   marker.data().coordinates.longitude,
                 ]}
-                key={indx}
+                key={marker.id}
                 icon={customIcon}
               >
                 <Popup>{marker.data().event}</Popup>
