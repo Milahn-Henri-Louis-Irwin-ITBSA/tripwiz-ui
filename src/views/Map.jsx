@@ -9,7 +9,7 @@ import MapEvents from '@/components/MapEvents';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
 import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
 import { useState, useEffect } from 'react';
-import { collection } from 'firebase/firestore';
+import { collection, limit, query, orderBy } from 'firebase/firestore';
 import BottomMiddleIcon from '@/components/ui/BottomMiddleIcon';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from '@/utils/firebase-config';
@@ -52,7 +52,12 @@ export default function Map() {
   const [showSidebar, setShowSidebar] = useState(true);
   const [showFeed, setShowFeed] = useState(true);
   const [showEvent, setShowEvent] = useState(true);
-  const [value, loading, error] = useCollection(collection(db, 'map'), {
+  const mapQuery = query(
+    collection(db, 'map'),
+    orderBy('created_at', 'asc'),
+    limit(100)
+  );
+  const [value, loading, error] = useCollection(mapQuery, {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
