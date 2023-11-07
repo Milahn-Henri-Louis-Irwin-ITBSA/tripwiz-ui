@@ -3,10 +3,77 @@ import Ambulance from '../assets/Ambulance.png';
 import Fireman from '../assets/Fireman.png';
 import Animal from '../assets/Animal.png';
 import Roadwork from '../assets/Roadwork.png';
+import { auth } from '@/utils/firebase-config';
 
 export default function Feed({ showEvent, setShowEvent }) {
   if (!showEvent || !setShowEvent) {
     return null;
+  }
+
+  async function retrieveUserCurrentCoordinates() {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+  }
+
+  async function handleSendOutAlert(event) {
+    try {
+      if (!auth.currentUser) return alert('Please login to send alert');
+      const coords = await retrieveUserCurrentCoordinates();
+      if (!coords) alert('Please enable location services');
+      const { latitude, longitude } = coords.coords;
+      if (!(latitude && longitude)) alert('Please enable location services');
+      const resp = await fetch(import.meta.env.VITE_ALERT_SERVICE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await auth.currentUser.getIdToken()}`,
+        },
+        body: JSON.stringify({
+          event,
+          coordinates: { long: longitude, lang: latitude },
+          info: 'This is Police',
+        }),
+      });
+      if (resp.ok) {
+        const plotMapRequest = await handlePlotMapViaService(event);
+        console.log(plotMapRequest);
+        if (plotMapRequest.ok) {
+          setShowEvent(false);
+          alert('Alert Sent');
+        } else {
+          alert('Something went wrong');
+        }
+      } else {
+        alert('Something went wrong');
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function handlePlotMapViaService(event) {
+    try {
+      if (!auth.currentUser) return alert('Please login to send alert');
+      const coords = await retrieveUserCurrentCoordinates();
+      if (!coords) alert('Please enable location services');
+      const { latitude, longitude } = coords.coords;
+      if (!(latitude && longitude)) alert('Please enable location services');
+      return await fetch(import.meta.env.VITE_MAP_SERVICE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await auth.currentUser.getIdToken()}`,
+        },
+        body: JSON.stringify({
+          event,
+          coordinates: { long: longitude, lang: latitude },
+          info: 'This is Police',
+        }),
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (
@@ -38,7 +105,10 @@ export default function Feed({ showEvent, setShowEvent }) {
               className="active:border-red-500 border-2 rounded-full"
             />
           </div>
-          <div className="cursor-pointer">
+          <div
+            className="cursor-pointer"
+            onClick={async () => handleSendOutAlert('fire')}
+          >
             <img src={Fireman} alt="Police" />
           </div>
           <div className="cursor-pointer">
