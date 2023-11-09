@@ -16,63 +16,61 @@ export default function Feed({ showEvent, setShowEvent }) {
     });
   }
 
-  async function handleSendOutAlert(event) {
+  async function handleSendOutAlert(event, { latitude, longitude }, token) {
     try {
-      if (!auth.currentUser) return alert('Please login to send alert');
-      const coords = await retrieveUserCurrentCoordinates();
-      if (!coords) alert('Please enable location services');
-      const { latitude, longitude } = coords.coords;
-      if (!(latitude && longitude)) alert('Please enable location services');
-      const resp = await fetch(import.meta.env.VITE_ALERT_SERVICE_URL, {
+      return await fetch(import.meta.env.VITE_ALERT_SERVICE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${await auth.currentUser.getIdToken()}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           event,
           coordinates: { long: longitude, lang: latitude },
-          info: 'This is Police',
+          info: 'An Event Was Triggered',
         }),
       });
-      if (resp.ok) {
-        const plotMapRequest = await handlePlotMapViaService(event);
-        console.log(plotMapRequest);
-        if (plotMapRequest.ok) {
-          setShowEvent(false);
-          alert('Alert Sent');
-        } else {
-          alert('Something went wrong');
-        }
-      } else {
-        alert('Something went wrong');
-      }
     } catch (e) {
       console.log(e);
     }
   }
 
-  async function handlePlotMapViaService(event) {
+  async function handlePlotMapViaService(
+    event,
+    { latitude, longitude },
+    token
+  ) {
     try {
-      if (!auth.currentUser) return alert('Please login to send alert');
-      const coords = await retrieveUserCurrentCoordinates();
-      if (!coords) alert('Please enable location services');
-      const { latitude, longitude } = coords.coords;
-      if (!(latitude && longitude)) alert('Please enable location services');
       return await fetch(import.meta.env.VITE_MAP_SERVICE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${await auth.currentUser.getIdToken()}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           event,
           coordinates: { long: longitude, lang: latitude },
-          info: 'This is Police',
+          info: 'An Event Was Triggered',
         }),
       });
     } catch (e) {
       console.log(e);
+    }
+  }
+
+  async function handleAlertAndMap(event) {
+    try {
+      const { coords } = await retrieveUserCurrentCoordinates();
+      const user = auth.currentUser;
+      if (!user) alert('Please login');
+      if (!coords) alert('Please enable location');
+      const token = await auth.currentUser.getIdToken();
+      return await Promise.all([
+        handlePlotMapViaService(event, coords, token),
+        handleSendOutAlert(event, coords, token),
+      ]);
+    } catch (e) {
+      throw new Error(e);
     }
   }
 
@@ -98,7 +96,10 @@ export default function Feed({ showEvent, setShowEvent }) {
       </div>
       <div className="h-3/4 flex flex-col p-4 ">
         <div className="grid grid-cols-5 gap-4 mb-2">
-          <div className="cursor-pointer">
+          <div
+            className="cursor-pointer"
+            onClick={async () => await handleAlertAndMap('police')}
+          >
             <img
               src={Police}
               alt="Police"
@@ -107,17 +108,26 @@ export default function Feed({ showEvent, setShowEvent }) {
           </div>
           <div
             className="cursor-pointer"
-            onClick={async () => handleSendOutAlert('fire')}
+            onClick={async () => await handleAlertAndMap('fire')}
           >
             <img src={Fireman} alt="Police" />
           </div>
-          <div className="cursor-pointer">
+          <div
+            className="cursor-pointer"
+            onClick={async () => await handleAlertAndMap('medical')}
+          >
             <img src={Ambulance} alt="Police" />
           </div>
-          <div className="cursor-pointer">
+          <div
+            className="cursor-pointer"
+            onClick={async () => await handleAlertAndMap('construction')}
+          >
             <img src={Roadwork} alt="Police" />
           </div>
-          <div className="cursor-pointer">
+          <div
+            className="cursor-pointer"
+            onClick={async () => await handleAlertAndMap('animal')}
+          >
             <img src={Animal} alt="Police" />
           </div>
         </div>
