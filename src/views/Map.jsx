@@ -13,16 +13,13 @@ import { collection, limit, query, orderBy } from 'firebase/firestore';
 import BottomMiddleIcon from '@/components/ui/BottomMiddleIcon';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from '@/utils/firebase-config';
-import MapPin from '../icons/MapLocFire.png';
-// create custom icon
-const customIcon = new Icon({
-  // iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png',
-  iconUrl: MapPin,
-  // eslint-disable-next-line no-undef
-  iconSize: [60, 60],
-});
+import pinFire from '../icons/MapLocFire.png';
+import pinAmbulance from '../icons/MapLocAmbulance.png';
+import pinAnimal from '../icons/MapLocAnimal.png';
+import pinPolice from '../icons/MapLocPolice.png';
+import pinConstruction from '../icons/MapLocConstruction.png';
+import pinDefault from '../icons/download.png';
 
-// custom cluster icon
 const createClusterCustomIcon = function (cluster) {
   return new divIcon({
     html: `<span class='cluster-icon'>${cluster.getChildCount()}</span>`,
@@ -31,21 +28,21 @@ const createClusterCustomIcon = function (cluster) {
   });
 };
 
-// markers
-// const markers = [
-//   {
-//     geocode: [-25.73134, 28.21837],
-//     popUp: 'Pretoria',
-//   },
-//   {
-//     geocode: [-33.9249, 18.4241],
-//     popUp: 'Cape Town',
-//   },
-//   {
-//     geocode: [-29.8587, 31.0218],
-//     popUp: 'Durban',
-//   },
-// ];
+const eventIcons = {
+  fire: pinFire,
+  medical: pinAmbulance,
+  animal: pinAnimal,
+  police: pinPolice,
+  construction: pinConstruction,
+};
+
+const createCustomIcon = (event) => {
+  const iconUrl = eventIcons[event] || pinDefault;
+  return new Icon({
+    iconUrl: iconUrl,
+    iconSize: [60, 60],
+  });
+};
 
 const initialMapCoordinates = [-28.4792625, 24.6727135];
 
@@ -107,15 +104,13 @@ export default function Map() {
           >
             {/* Mapping through the markers */}
             {value.docs.map((marker) => (
-              // eslint-disable-next-line react/jsx-key
-
               <Marker
                 position={[
                   marker.data().coordinates.latitude,
                   marker.data().coordinates.longitude,
                 ]}
                 key={marker.id}
-                icon={customIcon}
+                icon={createCustomIcon(marker.data().event)}
               >
                 <Popup>{marker.data().info}</Popup>
               </Marker>
