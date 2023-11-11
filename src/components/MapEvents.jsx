@@ -11,6 +11,10 @@ export default function Feed({ showEvent, setShowEvent }) {
   const [info, setInfo] = useState('');
   const [inputDisabled, setInputDisabled] = useState(true);
 
+  if (!showEvent || !setShowEvent) {
+    return null;
+  }
+
   async function retrieveUserCurrentCoordinates() {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject);

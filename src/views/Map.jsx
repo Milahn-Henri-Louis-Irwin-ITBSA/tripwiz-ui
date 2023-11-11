@@ -117,7 +117,7 @@ export default function Map() {
                 key={marker.id}
                 icon={customIcon}
               >
-                <Popup>{marker.data().event}</Popup>
+                <Popup>{marker.data().info}</Popup>
               </Marker>
             ))}
           </MarkerClusterGroup>
