@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
@@ -13,13 +13,7 @@ import MapEvents from '@/components/MapEvents';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
 import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
 import BottomMiddleIcon from '@/components/ui/BottomMiddleIcon';
-import pinFire from '../icons/MapLocFire.png';
-import pinAmbulance from '../icons/MapLocAmbulance.png';
-import pinAnimal from '../icons/MapLocAnimal.png';
-import pinPolice from '../icons/MapLocPolice.png';
-import pinConstruction from '../icons/MapLocConstruction.png';
-import pinDefault from '../icons/download.png';
-
+import DraggablePin from '@/components/DraggablePin';
 const createClusterCustomIcon = (cluster) => {
   return new divIcon({
     html: `<span class='cluster-icon'>${cluster.getChildCount()}</span>`,
@@ -27,24 +21,6 @@ const createClusterCustomIcon = (cluster) => {
     iconSize: point(33, 33, true),
   });
 };
-
-const eventIcons = {
-  fire: pinFire,
-  medical: pinAmbulance,
-  animal: pinAnimal,
-  police: pinPolice,
-  construction: pinConstruction,
-};
-
-const createCustomIcon = (event) => {
-  const iconUrl = eventIcons[event] || pinDefault;
-  return new Icon({
-    iconUrl: iconUrl,
-    iconSize: [60, 60],
-  });
-};
-
-const initialMapCoordinates = [-28.4792625, 24.6727135];
 
 const Map = () => {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -64,7 +40,6 @@ const Map = () => {
         setMapZoom(12);
       } catch (error) {
         console.error('Error getting geolocation:', error);
-        // Handle the error accordingly, e.g., show a message to the user
       }
     };
 
@@ -77,11 +52,11 @@ const Map = () => {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
-  const handleMapClick = useCallback(() => {
+  const handleMapClick = () => {
     setShowSidebar(false);
     setShowFeed(false);
     setShowEvent(false);
-  }, []);
+  };
 
   useEffect(() => {
     const mapContainer = document.querySelector('.leaflet-container');
@@ -93,7 +68,7 @@ const Map = () => {
         mapContainer.removeEventListener('mousedown', handleMapClick);
       };
     }
-  }, [handleMapClick]);
+  }, [loading]);
 
   if (!mapCenter || !mapZoom) {
     return null;
@@ -101,6 +76,7 @@ const Map = () => {
 
   return (
     <>
+      <h1 className="text-8xl text-red-800">{loading ?? 'NOPE'}</h1>
       <TopLeftAdditionalIcons
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
@@ -111,36 +87,37 @@ const Map = () => {
       <MapEvents showEvent={showEvent} setShowEvent={setShowEvent} />
       <Feed showFeed={showFeed} setShowFeed={setShowFeed} />
       <UserInformation />
-      <MapContainer
-        center={mapCenter}
-        zoom={mapZoom}
-        className="w-screen h-screen"
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+      {!loading && !error && (
+        <MapContainer
+          center={mapCenter}
+          zoom={mapZoom}
+          className="w-screen h-screen"
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
 
-        {!loading && !error && (
           <MarkerClusterGroup
             chunkedLoading
             iconCreateFunction={createClusterCustomIcon}
           >
             {value.docs.map((marker) => (
-              <Marker
-                position={[
+              <DraggablePin
+                coords={[
                   marker.data().coordinates.latitude,
                   marker.data().coordinates.longitude,
                 ]}
+                event={marker.data().event}
                 key={marker.id}
-                icon={createCustomIcon(marker.data().event)}
-              >
-                <Popup>{marker.data().info}</Popup>
-              </Marker>
+                pinID={marker.id}
+                info={marker.data().info}
+                created_by={marker.data().created_by}
+              />
             ))}
           </MarkerClusterGroup>
-        )}
-      </MapContainer>
+        </MapContainer>
+      )}
     </>
   );
 };
