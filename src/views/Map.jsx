@@ -1,18 +1,18 @@
+import { useState, useEffect, useCallback } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { divIcon, Icon, point } from 'leaflet';
+import { collection, query, orderBy } from 'firebase/firestore';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import { db } from '@/utils/firebase-config';
 import UserInformation from '@/components/ui/UserInformation';
 import Sidebar from '@/components/Sidebar';
 import Feed from '@/components/Feed';
 import MapEvents from '@/components/MapEvents';
 import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
 import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
-import { useState, useEffect } from 'react';
-import { collection, limit, query, orderBy } from 'firebase/firestore';
 import BottomMiddleIcon from '@/components/ui/BottomMiddleIcon';
-import { useCollection } from 'react-firebase-hooks/firestore';
-import { db } from '@/utils/firebase-config';
 import pinFire from '../icons/MapLocFire.png';
 import pinAmbulance from '../icons/MapLocAmbulance.png';
 import pinAnimal from '../icons/MapLocAnimal.png';
@@ -20,7 +20,7 @@ import pinPolice from '../icons/MapLocPolice.png';
 import pinConstruction from '../icons/MapLocConstruction.png';
 import pinDefault from '../icons/download.png';
 
-const createClusterCustomIcon = function (cluster) {
+const createClusterCustomIcon = (cluster) => {
   return new divIcon({
     html: `<span class='cluster-icon'>${cluster.getChildCount()}</span>`,
     className: 'custom-marker-cluster',
@@ -46,34 +46,58 @@ const createCustomIcon = (event) => {
 
 const initialMapCoordinates = [-28.4792625, 24.6727135];
 
-export default function Map() {
+const Map = () => {
   const [showSidebar, setShowSidebar] = useState(true);
   const [showFeed, setShowFeed] = useState(true);
   const [showEvent, setShowEvent] = useState(true);
-  const mapQuery = query(
-    collection(db, 'map'),
-    orderBy('created_at', 'asc'),
-    limit(100)
-  );
+  const [mapZoom, setMapZoom] = useState(null);
+  const [mapCenter, setMapCenter] = useState(null);
+
+  useEffect(() => {
+    const fetchUserLocation = async () => {
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+
+        setMapCenter([position.coords.latitude, position.coords.longitude]);
+        setMapZoom(12);
+      } catch (error) {
+        console.error('Error getting geolocation:', error);
+        // Handle the error accordingly, e.g., show a message to the user
+      }
+    };
+
+    fetchUserLocation();
+  }, []);
+
+  const mapQuery = query(collection(db, 'map'), orderBy('created_at', 'desc'));
+
   const [value, loading, error] = useCollection(mapQuery, {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
 
-  const handleMapClick = () => {
+  const handleMapClick = useCallback(() => {
     setShowSidebar(false);
     setShowFeed(false);
     setShowEvent(false);
-  };
+  }, []);
 
   useEffect(() => {
     const mapContainer = document.querySelector('.leaflet-container');
-    if (!mapContainer) return;
-    mapContainer.addEventListener('mousedown', handleMapClick);
 
-    return () => {
-      mapContainer.removeEventListener('mousedown', handleMapClick);
-    };
-  }, [loading]);
+    if (mapContainer) {
+      mapContainer.addEventListener('mousedown', handleMapClick);
+
+      return () => {
+        mapContainer.removeEventListener('mousedown', handleMapClick);
+      };
+    }
+  }, [handleMapClick]);
+
+  if (!mapCenter || !mapZoom) {
+    return null;
+  }
 
   return (
     <>
@@ -88,8 +112,8 @@ export default function Map() {
       <Feed showFeed={showFeed} setShowFeed={setShowFeed} />
       <UserInformation />
       <MapContainer
-        center={initialMapCoordinates}
-        zoom={6}
+        center={mapCenter}
+        zoom={mapZoom}
         className="w-screen h-screen"
       >
         <TileLayer
@@ -102,7 +126,6 @@ export default function Map() {
             chunkedLoading
             iconCreateFunction={createClusterCustomIcon}
           >
-            {/* Mapping through the markers */}
             {value.docs.map((marker) => (
               <Marker
                 position={[
@@ -120,4 +143,6 @@ export default function Map() {
       </MapContainer>
     </>
   );
-}
+};
+
+export default Map;

@@ -17,7 +17,11 @@ export default function FeedIncoming({ data }) {
       </div>
       <div className="col-span-4 p-1 rounded-md bg-slate-300 flex flex-col min-h-12 max-h-fit">
         <div className="flex items">
-          <p className="font-semibold text-xs">{data?.message}</p>
+          {data?.spam ? (
+            <p className="font-bold text-xs text-red-700">DETECTED AS SPAM</p>
+          ) : (
+            <p className="font-semibold text-xs">{data?.message}</p>
+          )}
         </div>
         <div className="mt-auto">
           <p className="text-xs font-extralight text-[#00669C]">

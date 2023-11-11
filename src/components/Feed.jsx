@@ -21,6 +21,7 @@ export default function Feed({ showFeed, setShowFeed }) {
         message: data.message,
         created_by_pic: data.created_by_pic,
         message_id: doc.id,
+        spam: data.spam,
       };
     });
     setfeedData(feedData);
