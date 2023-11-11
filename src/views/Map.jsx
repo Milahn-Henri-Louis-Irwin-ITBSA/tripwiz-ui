@@ -13,12 +13,13 @@ import { collection, limit, query, orderBy } from 'firebase/firestore';
 import BottomMiddleIcon from '@/components/ui/BottomMiddleIcon';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from '@/utils/firebase-config';
+import MapPin from '../icons/MapLocFire.png';
 // create custom icon
 const customIcon = new Icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png',
+  // iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png',
+  iconUrl: MapPin,
   // eslint-disable-next-line no-undef
-  // iconUrl: require('./icons/download.png.png'),
-  iconSize: [38, 38], // size of the icon
+  iconSize: [60, 60],
 });
 
 // custom cluster icon
