@@ -51,9 +51,6 @@ const Map = () => {
   const [value, loading, error] = useCollection(mapQuery, {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
-  useEffect(() => {
-    console.log(value.docs);
-  }, [value]);
 
   const handleMapClick = () => {
     setShowSidebar(false);
