@@ -51,6 +51,9 @@ const Map = () => {
   const [value, loading, error] = useCollection(mapQuery, {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
+  useEffect(() => {
+    console.log(value.docs);
+  }, [value]);
 
   const handleMapClick = () => {
     setShowSidebar(false);
@@ -87,17 +90,17 @@ const Map = () => {
       <MapEvents showEvent={showEvent} setShowEvent={setShowEvent} />
       <Feed showFeed={showFeed} setShowFeed={setShowFeed} />
       <UserInformation />
-      {!loading && !error && (
-        <MapContainer
-          center={mapCenter}
-          zoom={mapZoom}
-          className="w-screen h-screen"
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
+      <MapContainer
+        center={mapCenter}
+        zoom={mapZoom}
+        className="w-screen h-screen"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
 
+        {!loading && !error && (
           <MarkerClusterGroup
             chunkedLoading
             iconCreateFunction={createClusterCustomIcon}
@@ -109,15 +112,19 @@ const Map = () => {
                   marker.data().coordinates.longitude,
                 ]}
                 event={marker.data().event}
-                key={marker.id}
+                key={
+                  marker.id +
+                  marker.data().coordinates.latitude +
+                  marker.data().coordinates.longitude
+                }
                 pinID={marker.id}
                 info={marker.data().info}
                 created_by={marker.data().created_by}
               />
             ))}
           </MarkerClusterGroup>
-        </MapContainer>
-      )}
+        )}
+      </MapContainer>
     </>
   );
 };
