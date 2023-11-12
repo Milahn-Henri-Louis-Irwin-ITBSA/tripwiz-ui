@@ -2,22 +2,24 @@ import React, { useState } from 'react';
 import Logo from '@/icons/SidebarLogo.png';
 
 export default function Sidebar({ showSidebar, setShowSidebar }) {
-  const [kmValue, setKmValue] = useState(0);
-  const [kmValueFlights, setKmFlightValue] = useState(0);
+  const [kmValues, setKmValues] = useState({
+    kmValue: 0,
+    kmValueFlights: 0,
+  });
 
   const handleRangeChange = (event) => {
-    const newValue = event.target.value;
-    setKmValue(newValue);
-  };
-
-  const handleRangeFlightChange = (event) => {
-    const newValue = event.target.value;
-    setKmFlightValue(newValue);
+    const { name, value } = event.target;
+    setKmValues({
+      ...kmValues,
+      [name]: value,
+    });
   };
 
   if (!showSidebar) {
     return null;
   }
+
+  const { kmValue, kmValueFlights } = kmValues;
 
   return (
     <div className="h-[95vh] w-[20rem] absolute left-5 top-5 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
@@ -137,7 +139,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
             <input
               type="range"
               id="km-range"
-              name="km-range"
+              name="kmValue"
               min="0"
               max="100"
               value={kmValue}
@@ -182,11 +184,11 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
             <input
               type="range"
               id="km-range-flights"
-              name="km-range"
+              name="kmValueFlights"
               min="0"
               max="100"
               value={kmValueFlights}
-              onChange={handleRangeFlightChange}
+              onChange={handleRangeChange}
               className="w-full h-4 bg-gray-300 rounded-full appearance-none focus:outline-none"
             />
           </div>
