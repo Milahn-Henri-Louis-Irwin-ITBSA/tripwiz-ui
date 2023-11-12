@@ -1,12 +1,27 @@
-import SidebarItem from '@/components/ui/SidebarItem';
+import React, { useState } from 'react';
 import Logo from '@/icons/SidebarLogo.png';
+
 export default function Sidebar({ showSidebar, setShowSidebar }) {
+  const [kmValue, setKmValue] = useState(0);
+  const [kmValueFlights, setKmFlightValue] = useState(0);
+
+  const handleRangeChange = (event) => {
+    const newValue = event.target.value;
+    setKmValue(newValue);
+  };
+
+  const handleRangeFlightChange = (event) => {
+    const newValue = event.target.value;
+    setKmFlightValue(newValue);
+  };
+
   if (!showSidebar) {
     return null;
   }
+
   return (
-    <div className="h-[95dvh] w-[20rem] absolute left-5 top-5 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
-      <div className="h-2/6 py-5 px-5">
+    <div className="h-[95vh] w-[20rem] absolute left-5 top-5 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
+      <div className="h-1/4 pt-5 px-5">
         <div className="h-[10px] pt-2 flex items-center justify-start">
           <svg
             onClick={() => setShowSidebar(false)}
@@ -20,16 +35,16 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
             <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
           </svg>
         </div>
-        <div className="h-full flex items-center justify-center">
+        <div className="h-52 flex items-center justify-center">
           <img
             id="logo"
             src={Logo}
             alt="logo"
-            className="w- rounded-full aspect-sqaure object-cover"
+            className=" rounded-full aspect-sqaure object-cover"
           />
         </div>
       </div>
-      <div className="h-4/6 flex flex-col justify-start items-center pb-4 px-2 font-bold">
+      <div className="h-3/4 flex flex-col justify-start items-center pb-4 px-2 font-bold">
         <div className="inline-flex items-center justify-center w-full mb-2">
           <hr className="w-64 h-1 my-8 bg-gray-600 border-0 rounded "></hr>
           <div className="absolute px-3 -translate-x-1/2 bg-slate-100 left-1/2">
@@ -43,7 +58,6 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
             </svg>
           </div>
         </div>
-
         <form action="" className="mb-5">
           <div className="flex mb-4">
             <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-[#005DCA] border-2 border-[#005DCA] rounded-e-0  rounded-s-md">
@@ -59,7 +73,6 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
                 />
               </svg>
             </span>
-
             <input
               type="text"
               id="starting-location"
@@ -113,6 +126,84 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
             </svg>
           </div>
         </div>
+        <form action="" className="mb-4">
+          <div className="mb-4">
+            <label htmlFor="km-range" className="block text-gray-700 mb-1">
+              Select a KM Range:{' '}
+              <span className="text-blue-500 font-semibold ms-1">
+                {kmValue} km
+              </span>
+            </label>
+            <input
+              type="range"
+              id="km-range"
+              name="km-range"
+              min="0"
+              max="100"
+              value={kmValue}
+              onChange={handleRangeChange}
+              className="w-full h-4 bg-gray-300 rounded-full appearance-none focus:outline-none"
+            />
+          </div>
+
+          <button className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              className="bi bi-building-fill w-5 text-white me-2"
+              viewBox="0 0 16 16"
+            >
+              <path d="M3 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h3v-3.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V16h3a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H3Zm1 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Z" />
+            </svg>
+            <span className="text-sm">Show Hotels</span>
+          </button>
+        </form>
+        <div className="inline-flex items-center justify-center w-full">
+          <hr className="w-64 h-1 my-8 bg-gray-600 border-0 rounded "></hr>
+          <div className="absolute px-3 -translate-x-1/2 bg-slate-100 left-1/2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              className="bi bi-airplane-fill w-6 text-gray-600"
+              viewBox="0 0 16 16"
+            >
+              <path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z" />
+            </svg>
+          </div>
+        </div>
+        <form action="">
+          <div className="mb-4">
+            <label htmlFor="km-range" className="block text-gray-700 mb-1">
+              Select a KM Range:{' '}
+              <span className="text-blue-500 font-semibold ms-1">
+                {kmValueFlights} km
+              </span>
+            </label>
+            <input
+              type="range"
+              id="km-range-flights"
+              name="km-range"
+              min="0"
+              max="100"
+              value={kmValueFlights}
+              onChange={handleRangeFlightChange}
+              className="w-full h-4 bg-gray-300 rounded-full appearance-none focus:outline-none"
+            />
+          </div>
+
+          <button className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem] ">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              className="bi bi-airplane-fill w-5 text-white me-2"
+              viewBox="0 0 16 16"
+            >
+              <path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z" />
+            </svg>
+
+            <span className="text-sm">Show Flights</span>
+          </button>
+        </form>
       </div>
     </div>
   );
