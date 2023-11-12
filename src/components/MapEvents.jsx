@@ -10,6 +10,7 @@ export default function Feed({ showEvent, setShowEvent }) {
   const [selectedEvent, setSelectedEvent] = useState('');
   const [info, setInfo] = useState('');
   const [inputDisabled, setInputDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   if (!showEvent || !setShowEvent) {
     return null;
@@ -65,16 +66,27 @@ export default function Feed({ showEvent, setShowEvent }) {
 
   async function handleAlertAndMap(event) {
     try {
+      setIsLoading(true); // Set loading state to true
       const { coords } = await retrieveUserCurrentCoordinates();
       const user = auth.currentUser;
-      if (!user) alert('Please login');
-      if (!coords) alert('Please enable location');
+      if (!user) {
+        alert('Please login');
+        setIsLoading(false); // Set loading state back to false
+        return;
+      }
+      if (!coords) {
+        alert('Please enable location');
+        setIsLoading(false); // Set loading state back to false
+        return;
+      }
       const token = await auth.currentUser.getIdToken();
-      return await Promise.all([
+      await Promise.all([
         handlePlotMapViaService(event, coords, token),
         handleSendOutAlert(event, coords, token),
       ]);
+      setIsLoading(false); // Set loading state back to false when requests are complete
     } catch (e) {
+      setIsLoading(false); // Set loading state back to false in case of an error
       throw new Error(e);
     }
   }
@@ -184,19 +196,36 @@ export default function Feed({ showEvent, setShowEvent }) {
             />
             <button
               type="submit"
-              disabled={!selectedEvent || !info}
+              disabled={!selectedEvent || !info || isLoading}
               className="absolute right-0 top-0 h-full rounded-r-xl border border-[#005DCA] bg-[#005DCA] p-2.5 text-sm font-medium text-white  focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="h-4 w-4"
-                viewBox="0 0 16 16"
-              >
-                <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
-              </svg>
+              {isLoading ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="animate-spin h-4 w-4 text-white"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"
+                  />
+                  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="h-4 w-4"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                </svg>
+              )}
             </button>
           </div>
         </form>
