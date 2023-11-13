@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { LayersControl, MapContainer, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import { divIcon, Icon, point } from 'leaflet';
+import { divIcon, point } from 'leaflet';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from '@/utils/firebase-config';
@@ -14,6 +14,8 @@ import TopLeftAdditionalIcons from '@/components/ui/TopLeftAdditionalIcons';
 import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
 import BottomMiddleIcon from '@/components/ui/BottomMiddleIcon';
 import DraggablePin from '@/components/DraggablePin';
+import RoutingMachine from '@/components/RoutingControl';
+
 const createClusterCustomIcon = (cluster) => {
   return new divIcon({
     html: `<span class='cluster-icon'>${cluster.getChildCount()}</span>`,
@@ -28,6 +30,8 @@ const Map = () => {
   const [showEvent, setShowEvent] = useState(true);
   const [mapZoom, setMapZoom] = useState(null);
   const [mapCenter, setMapCenter] = useState(null);
+  const [start, setStart] = useState(null);
+  const [end, setEnd] = useState(null);
 
   useEffect(() => {
     const fetchUserLocation = async () => {
@@ -83,7 +87,12 @@ const Map = () => {
       />
       <TopRightAdditionalIcons showFeed={showFeed} setShowFeed={setShowFeed} />
       <BottomMiddleIcon showEvent={showEvent} setShowEvent={setShowEvent} />
-      <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+      <Sidebar
+        showSidebar={showSidebar}
+        setShowSidebar={setShowSidebar}
+        setStart={setStart}
+        setEnd={setEnd}
+      />
       <MapEvents showEvent={showEvent} setShowEvent={setShowEvent} />
       <Feed showFeed={showFeed} setShowFeed={setShowFeed} />
       <UserInformation />
@@ -102,6 +111,11 @@ const Map = () => {
             chunkedLoading
             iconCreateFunction={createClusterCustomIcon}
           >
+            <RoutingMachine
+              start={[-25.80795166171267, 28.30057740211487]}
+              end={[-25.690109865847596, 28.369102478027347]}
+              color={'red'}
+            />
             {value.docs.map((marker) => (
               <DraggablePin
                 coords={[

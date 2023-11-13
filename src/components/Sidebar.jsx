@@ -8,7 +8,12 @@ import pinAnimal from '../icons/MapLocAnimal.png';
 import pinPolice from '../icons/MapLocPolice.png';
 import pinConstruction from '../icons/MapLocConstruction.png';
 
-export default function Sidebar({ showSidebar, setShowSidebar }) {
+export default function Sidebar({
+  showSidebar,
+  setShowSidebar,
+  setStart,
+  setEnd,
+}) {
   const [kmValues, setKmValues] = useState({
     kmValue: 0,
     kmValueFlights: 0,
@@ -145,6 +150,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
               </svg>
             </span>
             <input
+              onInput={(e) => setStart(e.target.value)}
               type="text"
               id="starting-location"
               className="rounded-none rounded-e-lg bg-gray-50 border text-gray-900  block flex-1 min-w-0 w-full text-sm p-2.5  focus:outline-none "
@@ -166,6 +172,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
               </svg>
             </span>
             <input
+              onInput={(e) => setEnd(e.target.value)}
               type="text"
               id="ending-location"
               className="rounded-none rounded-e-lg bg-gray-50 border text-gray-900  block flex-1 min-w-0 w-full text-sm p-2.5  focus:outline-none "
