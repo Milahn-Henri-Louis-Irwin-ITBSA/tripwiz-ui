@@ -1,11 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '@/utils/firebase-config';
 import Logo from '@/icons/SidebarLogo.png';
+import pinFire from '../icons/MapLocFire.png';
+import pinAmbulance from '../icons/MapLocAmbulance.png';
+import pinAnimal from '../icons/MapLocAnimal.png';
+import pinPolice from '../icons/MapLocPolice.png';
+import pinConstruction from '../icons/MapLocConstruction.png';
 
 export default function Sidebar({ showSidebar, setShowSidebar }) {
   const [kmValues, setKmValues] = useState({
     kmValue: 0,
     kmValueFlights: 0,
   });
+  const [eventCounts, setEventCounts] = useState({
+    fire: 0,
+    medical: 0,
+    animal: 0,
+    police: 0,
+    construction: 0,
+  });
+
+  useEffect(() => {
+    // Fetch events from Firestore
+    const collectionRef = collection(db, 'map');
+    const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+      const counts = {
+        fire: 0,
+        medical: 0,
+        animal: 0,
+        police: 0,
+        construction: 0,
+      };
+      snapshot.docs.forEach((doc) => {
+        const eventData = doc.data();
+        if (eventData.event) {
+          counts[eventData.event]++;
+        }
+      });
+      setEventCounts(counts);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleRangeChange = (event) => {
     const { name, value } = event.target;
@@ -23,7 +60,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
 
   return (
     <div className="h-[95vh] w-[20rem] absolute left-5 top-5 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
-      <div className="h-1/4 pt-5 px-5">
+      <div className="h-1/5 pt-5 px-5 mb-6">
         <div className="h-[10px] pt-2 flex items-center justify-start">
           <svg
             onClick={() => setShowSidebar(false)}
@@ -37,16 +74,48 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
             <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
           </svg>
         </div>
-        <div className="h-52 flex items-center justify-center">
+        <div className="h-36 flex items-center justify-center ">
           <img
             id="logo"
             src={Logo}
             alt="logo"
-            className=" rounded-full aspect-sqaure object-cover"
+            className=" rounded-full aspect-sqaure w-60"
           />
         </div>
       </div>
-      <div className="h-3/4 flex flex-col justify-start items-center pb-4 px-2 font-bold">
+      <div className="h-4/5 flex flex-col justify-start items-center pb-4 px-2 font-bold">
+        <div className="flex gap-5">
+          <div className="text-center">
+            <img src={pinFire} alt="Fire" className="w-9 mb-1" />
+            <p className="text-blue-500 font-semibold text-lg">
+              {eventCounts.fire}
+            </p>
+          </div>
+          <div className=" text-center">
+            <img src={pinAmbulance} alt="Fire" className="w-9 mb-1" />
+            <p className="text-blue-500 font-semibold text-lg">
+              {eventCounts.medical}
+            </p>
+          </div>
+          <div className=" text-center">
+            <img src={pinAnimal} alt="Fire" className="w-9 mb-1" />
+            <p className="text-blue-500 font-semibold text-lg">
+              {eventCounts.animal}
+            </p>
+          </div>
+          <div className=" text-center">
+            <img src={pinPolice} alt="Fire" className="w-9 mb-1" />
+            <p className="text-blue-500 font-semibold text-lg">
+              {eventCounts.police}
+            </p>
+          </div>
+          <div className=" text-center">
+            <img src={pinConstruction} alt="Fire" className="w-9 mb-1" />
+            <p className="text-blue-500 font-semibold text-lg">
+              {eventCounts.construction}
+            </p>
+          </div>
+        </div>
         <div className="inline-flex items-center justify-center w-full mb-2">
           <hr className="w-64 h-1 my-8 bg-gray-600 border-0 rounded "></hr>
           <div className="absolute px-3 -translate-x-1/2 bg-slate-100 left-1/2">
@@ -60,7 +129,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
             </svg>
           </div>
         </div>
-        <form action="" className="mb-5">
+        <form action="" className="mb-3">
           <div className="flex mb-4">
             <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-[#005DCA] border-2 border-[#005DCA] rounded-e-0  rounded-s-md">
               <svg
@@ -203,7 +272,7 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
               <path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z" />
             </svg>
 
-            <span className="text-sm">Show Flights</span>
+            <span className="text-sm">Show Airports</span>
           </button>
         </form>
       </div>
