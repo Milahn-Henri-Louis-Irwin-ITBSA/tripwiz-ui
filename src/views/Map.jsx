@@ -114,7 +114,7 @@ const Map = () => {
             <RoutingMachine
               start={[-25.80795166171267, 28.30057740211487]}
               end={[-25.690109865847596, 28.369102478027347]}
-              color={'red'}
+              color={'aqua'}
             />
             {value.docs.map((marker) => (
               <DraggablePin

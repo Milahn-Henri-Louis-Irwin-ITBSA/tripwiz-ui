@@ -10,6 +10,8 @@ const createRoutineMachineLayer = ({ start, end, color }) => {
       styles: [
         {
           color,
+          weight: 8,
+          opacity: 1,
         },
       ],
     },
