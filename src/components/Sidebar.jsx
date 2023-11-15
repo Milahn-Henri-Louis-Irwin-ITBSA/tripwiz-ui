@@ -46,8 +46,9 @@ export default function Sidebar({
       const position = await retrieveUserCurrentCoordinates();
       const { latitude, longitude } = position.coords;
       const token = await auth.currentUser.getIdToken();
-      const response = await fetch(import.meta.env.VITE_MAP_SERVICE_URL, {
-        method: 'GET',
+      console.log(position.coords);
+      const response = await fetch(import.meta.env.VITE_TOURISM_SERVICE_URL, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -65,6 +66,7 @@ export default function Sidebar({
       if (response.ok) {
         const jsonResponse = await response.json();
         setData(jsonResponse.data);
+        // console.log(jsonResponse.data);
       } else {
         throw new Error('Network response was not ok.');
       }
@@ -101,6 +103,9 @@ export default function Sidebar({
 
   const { kmValue, kmValueFlights } = kmValues;
 
+  console.log('Data is: ', data);
+  console.log('Places is: ', data[0].places);
+  console.log('Location is: ', data[0].places[0].location);
   return (
     <div className="h-[95vh] w-[20rem] absolute left-5 top-5 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
       <div className="h-1/5 pt-5 px-5 mb-6">
@@ -264,7 +269,7 @@ export default function Sidebar({
 
         <button
           className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem]"
-          onClick={() => fetchTourismData('hotel')}
+          onClick={async () => await fetchTourismData('hotel', kmValue)}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -312,7 +317,9 @@ export default function Sidebar({
 
         <button
           className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem] "
-          onClick={() => fetchTourismData('airport')}
+          onClick={async () =>
+            await fetchTourismData('airport', kmValueFlights)
+          }
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -325,12 +332,32 @@ export default function Sidebar({
           <span className="text-sm">Show Airports</span>
         </button>
       </div>
-      {data &&
-        data.map((item, index) => (
-          <div key={index} className="p-4 border-b border-gray-200">
-            {{ item }}
-          </div>
-        ))}
+      {data && (
+        <div className="overflow-y-auto h-1/2 p-4">
+          {data[0].places.map((place, index) => (
+            <div key={index} className="p-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold">
+                {place.formattedAddress}
+              </h3>
+              <p>
+                {place.location &&
+                  `${place.location.latitude}, ${place.location.longitude}`}
+              </p>
+              <div className="flex flex-wrap gap-1 mt-2">
+                {place.types &&
+                  place.types.map((type, typeIndex) => (
+                    <span
+                      key={typeIndex}
+                      className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded"
+                    >
+                      {type}
+                    </span>
+                  ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
