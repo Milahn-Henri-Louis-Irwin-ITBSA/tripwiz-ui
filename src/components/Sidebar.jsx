@@ -177,7 +177,7 @@ export default function Sidebar({
           </div>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4  w-64">
           <label htmlFor="km-range" className="block text-gray-700 mb-1">
             Select a KM Range:{' '}
             <span className="text-blue-500 font-semibold ms-1">
@@ -226,7 +226,7 @@ export default function Sidebar({
           </div>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 w-64">
           <label htmlFor="km-range" className="block text-gray-700 mb-1">
             Select a KM Range:{' '}
             <span className="text-blue-500 font-semibold ms-1">
@@ -274,7 +274,7 @@ export default function Sidebar({
           </div>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 w-64">
           <label htmlFor="km-range" className="block text-gray-700 mb-1">
             Select a KM Range:{' '}
             <span className="text-blue-500 font-semibold ms-1">
