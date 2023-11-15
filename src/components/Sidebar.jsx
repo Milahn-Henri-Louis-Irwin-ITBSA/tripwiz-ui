@@ -187,7 +187,7 @@ export default function Sidebar({
           <input
             type="range"
             id="km-range"
-            name="kmValue"
+            name="kmValueFuel"
             min="1"
             max="100"
             value={kmValues.kmValueFuel}
