@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '@/utils/firebase-config';
 import Logo from '@/icons/SidebarLogo.png';
@@ -7,6 +7,7 @@ import pinAmbulance from '../icons/MapLocAmbulance.png';
 import pinAnimal from '../icons/MapLocAnimal.png';
 import pinPolice from '../icons/MapLocPolice.png';
 import pinConstruction from '../icons/MapLocConstruction.png';
+import PropTypes from 'prop-types';
 
 export default function Sidebar({ showSidebar, setShowSidebar }) {
   const [kmValues, setKmValues] = useState({
@@ -334,3 +335,8 @@ export default function Sidebar({ showSidebar, setShowSidebar }) {
     </div>
   );
 }
+
+Sidebar.propTypes = {
+  showSidebar: PropTypes.bool,
+  setShowSidebar: PropTypes.func,
+};
