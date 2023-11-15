@@ -26,7 +26,7 @@ export default function Sidebar({
     construction: 0,
   });
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
 
   async function retrieveUserCurrentCoordinates() {
     return new Promise((resolve, reject) => {
@@ -103,9 +103,6 @@ export default function Sidebar({
 
   const { kmValue, kmValueFlights } = kmValues;
 
-  console.log('Data is: ', data);
-  console.log('Places is: ', data[0].places);
-  console.log('Location is: ', data[0].places[0].location);
   return (
     <div className="h-[95vh] w-[20rem] absolute left-5 top-5 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
       <div className="h-1/5 pt-5 px-5 mb-6">
@@ -332,7 +329,7 @@ export default function Sidebar({
           <span className="text-sm">Show Airports</span>
         </button>
       </div>
-      {data && (
+      {data.length > 0 && (
         <div className="overflow-y-auto h-1/2 p-4">
           {data[0].places.map((place, index) => (
             <div key={index} className="p-4 border-b border-gray-200">
