@@ -104,12 +104,6 @@ export default function Sidebar({
 
   const { kmValue, kmValueFlights, kmValueFuel } = kmValues;
 
-<<<<<<< Updated upstream
-=======
-  // console.log('Data is: ', data);
-  // console.log('Places is: ', data[0].places);
-  // console.log('Location is: ', data[0].places[0].location);
->>>>>>> Stashed changes
   return (
     <div className="h-[95vh] w-[20rem] absolute left-5 top-5 z-[99999] bg-slate-100 rounded-3xl shadow-xl">
       <div className="h-1/5 pt-5 px-5 mb-6">
