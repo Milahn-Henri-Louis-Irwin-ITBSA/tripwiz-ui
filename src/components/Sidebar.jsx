@@ -8,12 +8,7 @@ import pinAnimal from '../icons/MapLocAnimal.png';
 import pinPolice from '../icons/MapLocPolice.png';
 import pinConstruction from '../icons/MapLocConstruction.png';
 
-export default function Sidebar({
-  showSidebar,
-  setShowSidebar,
-  setStart,
-  setEnd,
-}) {
+export default function Sidebar({ showSidebar, setShowSidebar }) {
   const [kmValues, setKmValues] = useState({
     kmValue: 1,
     kmValueFlights: 1,
