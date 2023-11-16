@@ -14,10 +14,11 @@ export default function Sidebar({
   setShowSidebar,
   updateTourismData,
 }) {
+  const [selectedServices, setSelectedServices] = useState([]);
   const [kmValues, setKmValues] = useState({
-    kmValue: 1,
-    kmValueFlights: 1,
-    kmValueFuel: 1,
+    hotel: 1,
+    airport: 1,
+    fuel: 1,
   });
   const [eventCounts, setEventCounts] = useState({
     fire: 0,
@@ -27,7 +28,15 @@ export default function Sidebar({
     construction: 0,
   });
 
-  // const [data, setData] = useState([]);
+  const updateSelectedServices = (service) => {
+    setSelectedServices((prevServices) => {
+      if (prevServices.includes(service)) {
+        return prevServices.filter((s) => s !== service);
+      } else {
+        return [...prevServices, service];
+      }
+    });
+  };
 
   async function retrieveUserCurrentCoordinates() {
     return new Promise((resolve, reject) => {
@@ -48,11 +57,15 @@ export default function Sidebar({
       const { latitude, longitude } = position.coords;
       const token = await auth.currentUser.getIdToken();
 
-      const services = [
-        { name: 'fuel', radius: kmValues.kmValueFuel * 1000 },
-        { name: 'airport', radius: kmValues.kmValueFlights * 1000 },
-        { name: 'hotel', radius: kmValues.kmValue * 1000 },
-      ];
+      const servicesToRequest = selectedServices.map((service) => ({
+        name: service,
+        radius: kmValues[service] * 1000,
+      }));
+
+      if (servicesToRequest.length === 0) {
+        console.log('No services selected');
+        return;
+      }
 
       const response = await fetch(import.meta.env.VITE_TOURISM_SERVICE_URL, {
         method: 'POST',
@@ -65,7 +78,7 @@ export default function Sidebar({
             latitude,
             longitude,
           },
-          services: services,
+          services: servicesToRequest,
         }),
       });
 
@@ -85,7 +98,6 @@ export default function Sidebar({
           })
           .flat();
         updateTourismData(formattedData);
-        // setData(formattedData);
       } else {
         throw new Error('Network response was not ok.');
       }
@@ -211,16 +223,16 @@ export default function Sidebar({
           <label htmlFor="km-range" className="block text-gray-700 mb-1">
             Select a KM Range:{' '}
             <span className="text-blue-500 font-semibold ms-1">
-              {kmValueFuel} km
+              {kmValues.fuel} km
             </span>
           </label>
           <input
             type="range"
             id="km-range"
-            name="kmValueFuel"
+            name="fuel"
             min="1"
             max="100"
-            value={kmValues.kmValueFuel}
+            value={kmValues.fuel}
             onChange={handleRangeChange}
             className="w-full h-4 bg-gray-300 rounded-full appearance-none focus:outline-none"
           />
@@ -228,7 +240,7 @@ export default function Sidebar({
 
         <button
           className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem]"
-          onClick={async () => await fetchTourismData('fuel', kmValueFuel)}
+          onClick={() => updateSelectedServices('fuel')}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -260,16 +272,16 @@ export default function Sidebar({
           <label htmlFor="km-range" className="block text-gray-700 mb-1">
             Select a KM Range:{' '}
             <span className="text-blue-500 font-semibold ms-1">
-              {kmValue} km
+              {kmValues.hotel} km
             </span>
           </label>
           <input
             type="range"
             id="km-range"
-            name="kmValue"
+            name="hotel"
             min="1"
             max="100"
-            value={kmValues.kmValue}
+            value={kmValues.hotel}
             onChange={handleRangeChange}
             className="w-full h-4 bg-gray-300 rounded-full appearance-none focus:outline-none"
           />
@@ -277,7 +289,7 @@ export default function Sidebar({
 
         <button
           className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem]"
-          onClick={async () => await fetchTourismData('hotel', kmValue)}
+          onClick={() => updateSelectedServices('hotel')}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -308,26 +320,24 @@ export default function Sidebar({
           <label htmlFor="km-range" className="block text-gray-700 mb-1">
             Select a KM Range:{' '}
             <span className="text-blue-500 font-semibold ms-1">
-              {kmValueFlights} km
+              {kmValues.airport} km
             </span>
           </label>
           <input
             type="range"
             id="km-range-flights"
-            name="kmValueFlights"
+            name="airport"
             min="1"
             max="100"
-            value={kmValues.kmValueFlights}
+            value={kmValues.airport}
             onChange={handleRangeChange}
             className="w-full h-4 bg-gray-300 rounded-full appearance-none focus:outline-none"
           />
         </div>
 
         <button
+          onClick={() => updateSelectedServices('airport')}
           className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem] mb-4"
-          onClick={async () =>
-            await fetchTourismData('airport', kmValueFlights)
-          }
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -338,6 +348,20 @@ export default function Sidebar({
             <path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z" />
           </svg>
           <span className="text-sm">Select Airports</span>
+        </button>
+        <button
+          onClick={fetchTourismData}
+          className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem] mb-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            className="bi bi-eyeglasses w-5 text-white me-2"
+            viewBox="0 0 16 16"
+          >
+            <path d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A1.993 1.993 0 0 0 8 6c-.532 0-1.016.208-1.375.547zM14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
+          </svg>
+          <span className="text-sm">Display Selected</span>
         </button>
       </div>
     </div>
