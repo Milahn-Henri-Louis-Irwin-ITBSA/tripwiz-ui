@@ -36,7 +36,6 @@ const Map = () => {
   const [tourismData, setTourismData] = useState([]);
 
   const updateTourismData = (newData) => {
-    console.log('Updating tourism data with:', newData);
     setTourismData(newData);
   };
 
@@ -80,8 +79,6 @@ const Map = () => {
       };
     }
   }, [loading]);
-
-  console.log('Tourism Data:', tourismData);
 
   if (!mapCenter || !mapZoom) {
     return null;
@@ -143,18 +140,17 @@ const Map = () => {
                 created_by={marker.data().created_by}
               />
             ))}
-
-            {tourismData.map((item, index) => (
-              <TourismPin
-                key={index}
-                coords={[item.coords.latitude, item.coords.longitude]}
-                formattedAdress={item.formattedAdress}
-                types={item.types}
-                iconType={item.iconType}
-              />
-            ))}
           </MarkerClusterGroup>
         )}
+        {tourismData.map((item, index) => (
+          <TourismPin
+            key={index}
+            coords={[item.coords.latitude, item.coords.longitude]}
+            formattedAddress={item.formattedAddress}
+            types={item.types}
+            iconType={item.iconType}
+          />
+        ))}
       </MapContainer>
     </>
   );

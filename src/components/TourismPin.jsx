@@ -16,10 +16,10 @@ const createCustomIcon = (service) => {
   const iconUrl = customIcons[service] || pinDefault;
   return new Icon({
     iconUrl: iconUrl,
-    iconSize: [60, 60],
+    iconSize: [45, 45],
   });
 };
-const TourismPin = ({ coords, formattedAdress, types, iconType }) => {
+const TourismPin = ({ coords, formattedAddress, types, iconType }) => {
   const markerRef = useRef(null);
 
   return (
@@ -30,7 +30,7 @@ const TourismPin = ({ coords, formattedAdress, types, iconType }) => {
             types.length > 0 &&
             types.map((type, indx) => <p key={indx}>{type}</p>)}
         </div>
-        <h1 className="text-lg">{formattedAdress}</h1>
+        <h1 className="text-lg">{formattedAddress}</h1>
       </Popup>
     </Marker>
   );
@@ -39,7 +39,7 @@ export default TourismPin;
 
 TourismPin.propTypes = {
   coords: PropTypes.object,
-  formattedAdress: PropTypes.string,
+  formattedAddress: PropTypes.string,
   types: PropTypes.array,
   iconType: PropTypes.string,
 };

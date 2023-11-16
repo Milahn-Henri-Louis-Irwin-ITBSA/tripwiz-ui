@@ -27,7 +27,7 @@ export default function Sidebar({
     construction: 0,
   });
 
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
 
   async function retrieveUserCurrentCoordinates() {
     return new Promise((resolve, reject) => {
@@ -85,7 +85,7 @@ export default function Sidebar({
           })
           .flat();
         updateTourismData(formattedData);
-        setData(formattedData);
+        // setData(formattedData);
       } else {
         throw new Error('Network response was not ok.');
       }
@@ -340,46 +340,6 @@ export default function Sidebar({
           <span className="text-sm">Select Airports</span>
         </button>
       </div>
-      {/* {data.length > 0 && (
-        <div className="overflow-y-auto h-1/2 p-4">
-          {data.map((service, serviceIndex) => (
-            <div key={serviceIndex}>
-              <h2 className="text-xl font-bold mb-2">
-                {service.service.replace('tripwiz-', '').toUpperCase()}
-              </h2>
-              {service.places.length > 0 ? (
-                service.places.map((place, index) => (
-                  <div key={index} className="p-4 border-b border-gray-200">
-                    <h3 className="text-lg font-semibold">
-                      {place.formattedAddress}
-                    </h3>
-                    <p>
-                      {place.location &&
-                        `${place.location.latitude}, ${place.location.longitude}`}
-                    </p>
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {place.types &&
-                        place.types.map((type, typeIndex) => (
-                          <span
-                            key={typeIndex}
-                            className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded"
-                          >
-                            {type}
-                          </span>
-                        ))}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500">
-                  No {service.service.replace('tripwiz-', '')} found in the
-                  area.
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      )} */}
     </div>
   );
 }
