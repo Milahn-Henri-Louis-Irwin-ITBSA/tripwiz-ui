@@ -25,12 +25,19 @@ const TourismPin = ({ coords, formattedAddress, types, iconType }) => {
   return (
     <Marker position={coords} ref={markerRef} icon={createCustomIcon(iconType)}>
       <Popup className="bg-transparent p-4 rounded-md ">
-        <div className="text-lg mb-2">
+        <h1 className="text-lg font-bold">{formattedAddress}</h1>
+        <div className="flex flex-wrap gap-1 mt-2 ">
           {types &&
             types.length > 0 &&
-            types.map((type, indx) => <p key={indx}>{type}</p>)}
+            types.map((type, indx) => (
+              <span
+                className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded"
+                key={indx}
+              >
+                {type}
+              </span>
+            ))}
         </div>
-        <h1 className="text-lg">{formattedAddress}</h1>
       </Popup>
     </Marker>
   );
