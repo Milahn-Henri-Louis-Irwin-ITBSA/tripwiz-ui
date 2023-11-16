@@ -144,7 +144,7 @@ export default function Sidebar({
     return null;
   }
 
-  const { kmValue, kmValueFlights, kmValueFuel } = kmValues;
+  // const { kmValue, kmValueFlights, kmValueFuel } = kmValues;
 
   return (
     <div className="h-[95vh] w-[20rem] absolute left-5 top-5 z-[99999] bg-slate-100 rounded-3xl shadow-xl">

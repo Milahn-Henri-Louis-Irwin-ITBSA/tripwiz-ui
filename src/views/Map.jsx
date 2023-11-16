@@ -118,11 +118,11 @@ const Map = () => {
             chunkedLoading
             iconCreateFunction={createClusterCustomIcon}
           >
-            <RoutingMachine
+            {/* <RoutingMachine
               start={[-25.80795166171267, 28.30057740211487]}
               end={[-25.690109865847596, 28.369102478027347]}
               color={'aqua'}
-            />
+            /> */}
             {value.docs.map((marker) => (
               <DraggablePin
                 coords={[
@@ -140,17 +140,17 @@ const Map = () => {
                 created_by={marker.data().created_by}
               />
             ))}
+            {tourismData.map((item, index) => (
+              <TourismPin
+                key={index}
+                coords={[item.coords.latitude, item.coords.longitude]}
+                formattedAddress={item.formattedAddress}
+                types={item.types}
+                iconType={item.iconType}
+              />
+            ))}
           </MarkerClusterGroup>
         )}
-        {tourismData.map((item, index) => (
-          <TourismPin
-            key={index}
-            coords={[item.coords.latitude, item.coords.longitude]}
-            formattedAddress={item.formattedAddress}
-            types={item.types}
-            iconType={item.iconType}
-          />
-        ))}
       </MapContainer>
     </>
   );

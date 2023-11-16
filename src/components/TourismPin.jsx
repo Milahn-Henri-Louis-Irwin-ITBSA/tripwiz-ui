@@ -45,7 +45,7 @@ const TourismPin = ({ coords, formattedAddress, types, iconType }) => {
 export default TourismPin;
 
 TourismPin.propTypes = {
-  coords: PropTypes.object,
+  coords: PropTypes.array,
   formattedAddress: PropTypes.string,
   types: PropTypes.array,
   iconType: PropTypes.string,
