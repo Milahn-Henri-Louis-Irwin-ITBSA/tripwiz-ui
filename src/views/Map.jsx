@@ -15,6 +15,7 @@ import TopRightAdditionalIcons from '@/components/ui/TopRightAdditionalIcons';
 import BottomMiddleIcon from '@/components/ui/BottomMiddleIcon';
 import DraggablePin from '@/components/DraggablePin';
 import RoutingMachine from '@/components/RoutingControl';
+import TourismPin from '@/components/TourismPin';
 
 const createClusterCustomIcon = (cluster) => {
   return new divIcon({
@@ -32,6 +33,12 @@ const Map = () => {
   const [mapCenter, setMapCenter] = useState(null);
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
+  const [tourismData, setTourismData] = useState([]);
+
+  const updateTourismData = (newData) => {
+    console.log('Updating tourism data with:', newData);
+    setTourismData(newData);
+  };
 
   useEffect(() => {
     const fetchUserLocation = async () => {
@@ -74,6 +81,8 @@ const Map = () => {
     }
   }, [loading]);
 
+  console.log('Tourism Data:', tourismData);
+
   if (!mapCenter || !mapZoom) {
     return null;
   }
@@ -90,6 +99,7 @@ const Map = () => {
       <Sidebar
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
+        updateTourismData={updateTourismData}
         setStart={setStart}
         setEnd={setEnd}
       />
@@ -131,6 +141,16 @@ const Map = () => {
                 pinID={marker.id}
                 info={marker.data().info}
                 created_by={marker.data().created_by}
+              />
+            ))}
+
+            {tourismData.map((item, index) => (
+              <TourismPin
+                key={index}
+                coords={[item.coords.latitude, item.coords.longitude]}
+                formattedAdress={item.formattedAdress}
+                types={item.types}
+                iconType={item.iconType}
               />
             ))}
           </MarkerClusterGroup>
