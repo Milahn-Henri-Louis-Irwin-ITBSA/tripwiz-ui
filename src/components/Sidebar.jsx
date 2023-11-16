@@ -103,6 +103,8 @@ export default function Sidebar({
       }
     } catch (error) {
       console.error('Fetch operation:', error.message);
+    } finally {
+      setSelectedServices([]);
     }
   };
 
@@ -167,12 +169,12 @@ export default function Sidebar({
             id="logo"
             src={Logo}
             alt="logo"
-            className=" rounded-full aspect-sqaure w-60"
+            className=" rounded-full aspect-sqaure w-56"
           />
         </div>
       </div>
       <div className="h-4/5 flex flex-col justify-start items-center pb-4 px-2 font-bold">
-        <div className="flex gap-5 mb-6">
+        <div className="flex gap-5 ">
           <div className="text-center">
             <img src={pinFire} alt="Fire" className="w-9 mb-1" />
             <p className="text-blue-500 font-semibold text-lg">
@@ -205,7 +207,7 @@ export default function Sidebar({
           </div>
         </div>
         <div className="inline-flex items-center justify-center w-full mb-2">
-          <hr className="w-64 h-1 my-8 bg-gray-600 border-0 rounded "></hr>
+          <hr className="w-64 h-1 my-7 bg-gray-600 border-0 rounded "></hr>
           <div className="absolute px-3 -translate-x-1/2 bg-slate-100 left-1/2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -231,7 +233,7 @@ export default function Sidebar({
             id="km-range"
             name="fuel"
             min="1"
-            max="100"
+            max="50"
             value={kmValues.fuel}
             onChange={handleRangeChange}
             className="w-full h-4 bg-gray-300 rounded-full appearance-none focus:outline-none"
@@ -239,8 +241,9 @@ export default function Sidebar({
         </div>
 
         <button
-          className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem]"
+          className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem] disabled:cursor-not-allowed"
           onClick={() => updateSelectedServices('fuel')}
+          disabled={selectedServices.includes('fuel')}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -255,7 +258,7 @@ export default function Sidebar({
         </button>
 
         <div className="inline-flex items-center justify-center w-full">
-          <hr className="w-64 h-1 my-8 bg-gray-600 border-0 rounded "></hr>
+          <hr className="w-64 h-1 my-7 bg-gray-600 border-0 rounded "></hr>
           <div className="absolute px-3 -translate-x-1/2 bg-slate-100 left-1/2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -280,7 +283,7 @@ export default function Sidebar({
             id="km-range"
             name="hotel"
             min="1"
-            max="100"
+            max="50"
             value={kmValues.hotel}
             onChange={handleRangeChange}
             className="w-full h-4 bg-gray-300 rounded-full appearance-none focus:outline-none"
@@ -288,8 +291,9 @@ export default function Sidebar({
         </div>
 
         <button
-          className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem]"
+          className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem] disabled:cursor-not-allowed"
           onClick={() => updateSelectedServices('hotel')}
+          disabled={selectedServices.includes('hotel')}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -303,7 +307,7 @@ export default function Sidebar({
         </button>
 
         <div className="inline-flex items-center justify-center w-full">
-          <hr className="w-64 h-1 my-8 bg-gray-600 border-0 rounded "></hr>
+          <hr className="w-64 h-1 my-7 bg-gray-600 border-0 rounded "></hr>
           <div className="absolute px-3 -translate-x-1/2 bg-slate-100 left-1/2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -328,7 +332,7 @@ export default function Sidebar({
             id="km-range-flights"
             name="airport"
             min="1"
-            max="100"
+            max="50"
             value={kmValues.airport}
             onChange={handleRangeChange}
             className="w-full h-4 bg-gray-300 rounded-full appearance-none focus:outline-none"
@@ -337,7 +341,8 @@ export default function Sidebar({
 
         <button
           onClick={() => updateSelectedServices('airport')}
-          className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem] mb-4"
+          className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem] mb-4 disabled:cursor-not-allowed"
+          disabled={selectedServices.includes('airport')}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -351,16 +356,8 @@ export default function Sidebar({
         </button>
         <button
           onClick={fetchTourismData}
-          className="bg-[#005DCA] text-white p-3 rounded-md flex items-center justify-center w-[16.25rem] mb-4"
+          className="bg-transparent hover:bg-[#005DCA] text-[#005DCA] font-semibold w-[16.25rem] p-3 flex items-center justify-center hover:text-white  border border-[#005DCA] hover:border-transparent rounded-md"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            className="bi bi-eyeglasses w-5 text-white me-2"
-            viewBox="0 0 16 16"
-          >
-            <path d="M4 6a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm2.625.547a3 3 0 0 0-5.584.953H.5a.5.5 0 0 0 0 1h.541A3 3 0 0 0 7 8a1 1 0 0 1 2 0 3 3 0 0 0 5.959.5h.541a.5.5 0 0 0 0-1h-.541a3 3 0 0 0-5.584-.953A1.993 1.993 0 0 0 8 6c-.532 0-1.016.208-1.375.547zM14 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
-          </svg>
           <span className="text-sm">Display Selected</span>
         </button>
       </div>
