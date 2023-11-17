@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { LayersControl, MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { divIcon, point } from 'leaflet';
 import { collection, query, orderBy } from 'firebase/firestore';
@@ -34,26 +34,31 @@ const Map = () => {
   const [start, setStart] = useState(null);
   const [end, setEnd] = useState(null);
   const [tourismData, setTourismData] = useState([]);
+  const [gettingUserLocation, setGettingUserLocation] = useState(false);
 
   const updateTourismData = (newData) => {
     setTourismData(newData);
   };
+  const fetchUserLocation = async () => {
+    try {
+      return await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+    } catch (error) {
+      console.error('Error getting geolocation:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserLocation = async () => {
-      try {
-        const position = await new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-
-        setMapCenter([position.coords.latitude, position.coords.longitude]);
-        setMapZoom(12);
-      } catch (error) {
-        console.error('Error getting geolocation:', error);
-      }
+    const setInitialMapCenter = async () => {
+      const currentUserCoords = await fetchUserLocation();
+      setMapCenter([
+        currentUserCoords.coords.latitude,
+        currentUserCoords.coords.longitude,
+      ]);
+      setMapZoom(13);
     };
-
-    fetchUserLocation();
+    setInitialMapCenter();
   }, []);
 
   const mapQuery = query(collection(db, 'map'), orderBy('created_at', 'desc'));
@@ -61,6 +66,17 @@ const Map = () => {
   const [value, loading, error] = useCollection(mapQuery, {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
+
+  const initiateNavigate = useCallback(async (coords) => {
+    setGettingUserLocation(true);
+    const currentUserCoords = await fetchUserLocation();
+    setStart([
+      currentUserCoords.coords.latitude,
+      currentUserCoords.coords.longitude,
+    ]);
+    setEnd(coords);
+    setGettingUserLocation(false);
+  }, []);
 
   const handleMapClick = () => {
     setShowSidebar(false);
@@ -103,55 +119,57 @@ const Map = () => {
       <MapEvents showEvent={showEvent} setShowEvent={setShowEvent} />
       <Feed showFeed={showFeed} setShowFeed={setShowFeed} />
       <UserInformation />
-      <MapContainer
-        center={mapCenter}
-        zoom={mapZoom}
-        className="w-screen h-screen"
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+      {mapCenter && mapZoom && (
+        <MapContainer
+          center={mapCenter}
+          zoom={mapZoom}
+          className="w-screen h-screen"
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
 
-        {!loading && !error && (
-          <MarkerClusterGroup
-            chunkedLoading
-            iconCreateFunction={createClusterCustomIcon}
-          >
-            {/* <RoutingMachine
-              start={[-25.80795166171267, 28.30057740211487]}
-              end={[-25.690109865847596, 28.369102478027347]}
-              color={'aqua'}
-            /> */}
-            {value.docs.map((marker) => (
-              <DraggablePin
-                coords={[
-                  marker.data().coordinates.latitude,
-                  marker.data().coordinates.longitude,
-                ]}
-                event={marker.data().event}
-                key={
-                  marker.id +
-                  marker.data().coordinates.latitude +
-                  marker.data().coordinates.longitude
-                }
-                pinID={marker.id}
-                info={marker.data().info}
-                created_by={marker.data().created_by}
-              />
-            ))}
-            {tourismData.map((item, index) => (
-              <TourismPin
-                key={index}
-                coords={[item.coords.latitude, item.coords.longitude]}
-                formattedAddress={item.formattedAddress}
-                types={item.types}
-                iconType={item.iconType}
-              />
-            ))}
-          </MarkerClusterGroup>
-        )}
-      </MapContainer>
+          {!loading && !error && (
+            <MarkerClusterGroup
+              chunkedLoading
+              iconCreateFunction={createClusterCustomIcon}
+            >
+              {!gettingUserLocation && end && start && (
+                <RoutingMachine start={start} end={end} color={'black'} />
+              )}
+              {value.docs.map((marker) => (
+                <DraggablePin
+                  coords={[
+                    marker.data().coordinates.latitude,
+                    marker.data().coordinates.longitude,
+                  ]}
+                  event={marker.data().event}
+                  key={
+                    marker.id +
+                    marker.data().coordinates.latitude +
+                    marker.data().coordinates.longitude
+                  }
+                  pinID={marker.id}
+                  info={marker.data().info}
+                  created_by={marker.data().created_by}
+                />
+              ))}
+              {tourismData.map((item, index) => (
+                <TourismPin
+                  key={item.coords.latitude + item.coords.longitude + index}
+                  coords={[item.coords.latitude, item.coords.longitude]}
+                  formattedAddress={item.formattedAddress}
+                  types={item.types}
+                  iconType={item.iconType}
+                  initiateNavigate={initiateNavigate}
+                  settingMapState={gettingUserLocation}
+                />
+              ))}
+            </MarkerClusterGroup>
+          )}
+        </MapContainer>
+      )}
     </>
   );
 };

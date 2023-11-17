@@ -19,7 +19,13 @@ const createCustomIcon = (service) => {
     iconSize: [45, 45],
   });
 };
-const TourismPin = ({ coords, formattedAddress, types, iconType }) => {
+const TourismPin = ({
+  coords,
+  formattedAddress,
+  types,
+  iconType,
+  initiateNavigate,
+}) => {
   const markerRef = useRef(null);
 
   return (
@@ -38,6 +44,14 @@ const TourismPin = ({ coords, formattedAddress, types, iconType }) => {
               </span>
             ))}
         </div>
+        <div className="flex gap-1 mt-2">
+          <button
+            className="rounded-md border border-blue-500 text-blue-500 px-2 py-1 text-xs font-semibold hover:bg-blue-500 hover:text-white transition duration-300 ease-in-out"
+            onClick={async () => await initiateNavigate(coords)}
+          >
+            Navigate
+          </button>
+        </div>
       </Popup>
     </Marker>
   );
@@ -49,4 +63,5 @@ TourismPin.propTypes = {
   formattedAddress: PropTypes.string,
   types: PropTypes.array,
   iconType: PropTypes.string,
+  initiateNavigate: PropTypes.func,
 };
